@@ -25,4 +25,4 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 
     EMG signal envelop detection for robotics and biomedical applications.
 
-    <img src="3_EMGEnvelop/EMGEnvelop.png" height="300" width="400">
+    <img src="3_EMGEnvelope/EMGEnvelope.png" height="300" width="400">
