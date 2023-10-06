@@ -5,7 +5,7 @@
 // please support Upside Down Labs and open-source hardware by purchasing
 // products from Upside Down Labs!
 
-// Copyright (c) 2021 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2021 - 2023 Upside Down Labs - contact@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define SAMPLE_RATE 125
+
+// Samples per second
+#define SAMPLE_RATE 500
+
+// Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
+
+// Change if not using A0 analog pin
 #define INPUT_PIN A0
 
 

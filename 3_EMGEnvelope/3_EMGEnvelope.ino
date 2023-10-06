@@ -1,11 +1,11 @@
-// EMG Envelop - BioAmp EXG Pill
+// EMG envelope - BioAmp EXG Pill
 // https://github.com/upsidedownlabs/BioAmp-EXG-Pill
 
 // Upside Down Labs invests time and resources providing this open source code,
 // please support Upside Down Labs and open-source hardware by purchasing
 // products from Upside Down Labs!
 
-// Copyright (c) 2021 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2021 - 2023 Upside Down Labs - contact@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Samples per second
 #define SAMPLE_RATE 500
+
+// Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
+
+// Change if not using A0 analog pin
 #define INPUT_PIN A0
-#define BUFFER_SIZE 128
+
+// envelope buffer size
+// High value -> smooth but less responsive
+// Low value -> not smooth but responsive
+#define BUFFER_SIZE 64
 
 int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
@@ -49,20 +58,29 @@ void loop() {
 	static long timer = 0;
 	timer -= interval;
 
-	// Sample and get envelop
+	// Sample and get envelope
 	if(timer < 0) {
 		timer += 1000000 / SAMPLE_RATE;
+    // RAW EMG
 		int sensor_value = analogRead(INPUT_PIN);
+   
+    // Filtered EMG
 		int signal = EMGFilter(sensor_value);
-		int envelop = getEnvelop(abs(signal));
+   
+    // EMG envelope
+		int envelope = getEnvelope(abs(signal));
+
+    // EMG Raw signal
 		Serial.print(signal);
+    // Data seprator
 		Serial.print(",");
-		Serial.println(envelop);
+    // EMG Envelope
+		Serial.println(envelope);
 	}
 }
 
-// Envelop detection algorithm
-int getEnvelop(int abs_emg){
+// envelope detection algorithm
+int getEnvelope(int abs_emg){
 	sum -= circular_buffer[data_index];
 	sum += abs_emg;
 	circular_buffer[data_index] = abs_emg;

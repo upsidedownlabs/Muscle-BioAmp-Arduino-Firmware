@@ -5,7 +5,7 @@
 // please support Upside Down Labs and open-source hardware by purchasing
 // products from Upside Down Labs!
 
-// Copyright (c) 2021 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2021-2023 Upside Down Labs - contact@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,22 +25,59 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <Servo.h>
+#if defined(ESP32) 
+  // For ESP32 Servo library
+  #include <ESP32Servo.h>
+#else
+  // Arduino Servo library
+  #include <Servo.h>
+#endif
 
+// Samples per second
 #define SAMPLE_RATE 500
+
+// Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
+
+// Change if not using A0 analog pin
 #define INPUT_PIN A0
-#define BUFFER_SIZE 128
-#define SERVO_PIN 2
+
+// envelopeee buffer size
+// High value -> smooth but less responsive
+// Low value -> not smooth but responsive
+#define BUFFER_SIZE 64
+
+// Servo pin (Change as per your connection)
+#define SERVO_PIN 2 // Pin2 for Muscle BioAmp Shield v0.3
+
+// EMG Threshold value, different for each user
+// Check by plotting EMG envelopee data on Serial plotter
+#define EMG_THRESHOLD 24
+
+// Servo head start & end angles
+#define SERVO_START 4
+#define SERVO_END 174
+
+// EMG Envelope baseline value
+// Minimum value without flexing hand
+#define EMG_ENVELOPE_BASELINE 4
+
+// EMG Envelope divider
+// Minimum value increase required to turn on a single LED
+#define EMG_ENVELOPE_DIVIDER 4
 
 Servo servo;
-int steps = 0;
-unsigned long lastDebounceTime = 0;
-unsigned long debounceDelay = 240;
+// Servo angle
+int angle = 0;
+// Last gesture timestamp
+unsigned long lastGestureTime = 0;
+// Delay between two actions
+unsigned long gestureDelay = 240;
 
 int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
-// LED pin numbers in-order
+
+// Muscle BioAmp Shield v0.3 LED pin numbers in-order
 int led_bar[] = {8, 9, 10, 11, 12, 13};
 int total_leds = sizeof(led_bar) / sizeof(led_bar[0]);
 
@@ -52,7 +89,7 @@ void setup() {
       pinMode(led_bar[i], OUTPUT);
     }
    servo.attach(SERVO_PIN);
-   servo.write(0);
+   servo.write(angle);
 }
 
 void loop() {
@@ -69,39 +106,47 @@ void loop() {
   // Sample and get envelop
   if(timer < 0) {
     timer += 1000000 / SAMPLE_RATE;
+
+    // RAW EMG Values
     int sensor_value = analogRead(INPUT_PIN);
+    
+    // Filtered EMG
     int signal = EMGFilter(sensor_value);
-    int envelop = getEnvelop(abs(signal));
+    
+    // EMG envelopee
+    int envelope = getEnvelope(abs(signal));
 
     // Update LED bar graph
-      for(int i = 0; i<=total_leds; i++){
-        if(i>(envelop/4 - 24)){
-            digitalWrite(led_bar[i], LOW);
-        } else {
-            digitalWrite(led_bar[i], HIGH);
-        }
+    for(int i = 0; i<=total_leds; i++){
+      if(i>(envelope/EMG_ENVELOPE_DIVIDER - EMG_ENVELOPE_BASELINE)){
+          digitalWrite(led_bar[i], LOW);
+      } else {
+          digitalWrite(led_bar[i], HIGH);
       }
+    }
      
     
-      if((millis() - lastDebounceTime) > debounceDelay){
-        if(envelop > 15 && steps > 4) {
-          servo.write(steps--);
-          lastDebounceTime = millis();
-        } else if(envelop < 15 && steps < 174) {
-          servo.write(steps++);
+      if((millis() - lastGestureTime) > gestureDelay){
+        if(envelope > EMG_THRESHOLD && angle > SERVO_START) {
+          servo.write(angle--);
+          lastGestureTime = millis();
+        } else if(envelope < EMG_THRESHOLD && angle < SERVO_END) {
+          servo.write(angle++);
         }
       }
 
 
-//    Serial.print(signal);
-//    Serial.print(",");
-    Serial.println(envelop);
-
+    // EMG Raw signal
+    Serial.print(signal);
+    // Data seprator
+    Serial.print(",");
+    // EMG envelopeee
+    Serial.println(envelope);
   }
 }
 
 // Envelop detection algorithm
-int getEnvelop(int abs_emg){
+int getEnvelope(int abs_emg){
   sum -= circular_buffer[data_index];
   sum += abs_emg;
   circular_buffer[data_index] = abs_emg;

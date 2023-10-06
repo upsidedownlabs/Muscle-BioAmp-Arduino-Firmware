@@ -5,7 +5,7 @@
 // please support Upside Down Labs and open-source hardware by purchasing
 // products from Upside Down Labs!
 
-// Copyright (c) 2021 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2021 - 2023 Upside Down Labs - contact@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Samples per second
 #define SAMPLE_RATE 500
+
+// Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
-#define INPUT_PIN 32
+
+// Change if not using A0 analog pin
+#define INPUT_PIN A0
 
 
 void setup() {
@@ -49,8 +54,11 @@ void loop() {
 	// Sample
 	if(timer < 0){
 		timer += 1000000 / SAMPLE_RATE;
+    // Get analog input value (Raw EMG)
 		float sensor_value = analogRead(INPUT_PIN);
+    // Apply filter to raw EMG
 		float signal = EMGFilter(sensor_value);
+    // Print on serial with new line
 		Serial.println(signal);
 	}
 }

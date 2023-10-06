@@ -1,5 +1,3 @@
-#include <dummy.h>
-
 // Servo Control - BioAmp EXG Pill
 // https://github.com/upsidedownlabs/BioAmp-EXG-Pill
 
@@ -28,63 +26,94 @@
 // SOFTWARE.
 
 #if defined(ESP32) 
+  // ESP32 Servo library
   #include <ESP32Servo.h>
 #else
+  // Arduino Servo library
   #include <Servo.h>
 #endif
 
+// Samples per second
 #define SAMPLE_RATE 500
+
+// Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
-#define INPUT_PIN 17
-#define BUFFER_SIZE 128
-#define SERVO_PIN 19
-#define EMG_MIN 2
-#define EMG_MAX 10
+
+// Change if not using A0 analog pin
+#define INPUT_PIN A0
+
+// envelopee buffer size
+// High value -> smooth but less responsive
+// Low value -> not smooth but responsive
+#define BUFFER_SIZE 64
+
+// Servo pin (Change as per your connection)
+#define SERVO_PIN 2 // Pin2 for Muscle BioAmp Shield v0.3
+
+// EMG Threshold value, different for each user
+// Check by plotting EMG envelopee data on Serial plotter
+#define EMG_THRESHOLD 47
+
+// Servo open & close angles
+#define SERVO_OPEN 10
+#define SERVO_CLOSE 90
 
 int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
-
+int flag=0;
 Servo servo;
 
 void setup() {
-	// Serial connection begin
-	Serial.begin(BAUD_RATE);
+  // Serial connection begin
+  Serial.begin(BAUD_RATE);
   // Attach servo
   servo.attach(SERVO_PIN);
 }
 
-void loop() {
-	// Calculate elapsed time
-	static unsigned long past = 0;
-	unsigned long present = micros();
-	unsigned long interval = present - past;
-	past = present;
+void loop() {  
+  // Calculate elapsed time
+  static unsigned long past = 0;
+  unsigned long present = micros();
+  unsigned long interval = present - past;
+  past = present;
 
-	// Run timer
-	static long timer = 0;
-	timer -= interval;
+  // Run timer
+  static long timer = 0;
+  timer -= interval;
 
-	// Sample and get envelop
-	if(timer < 0) {
-		timer += 1000000 / SAMPLE_RATE;
-		int sensor_value = analogRead(INPUT_PIN);
-		int signal = EMGFilter(sensor_value);
-		int envelop = getEnvelop(abs(signal));
-    int servo_position = map(envelop, EMG_MIN, EMG_MAX, 0, 180);
-    servo.write(servo_position);
-		Serial.print(signal);
-		Serial.print(",");
-		Serial.println(servo_position);
-	}
+  // Sample and get envelope
+  if(timer < 0) {
+    timer += 1000000 / SAMPLE_RATE;
+    
+    // RAW EMG Values
+    int sensor_value = analogRead(INPUT_PIN);
+    
+    // Filtered EMG
+    int signal = EMGFilter(sensor_value);
+    
+    // EMG envelopee
+    int envelope = getEnvelope(abs(signal));
+    
+    // Move servo
+    if(envelope > EMG_THRESHOLD) servo.write(SERVO_CLOSE);
+    else servo.write(SERVO_OPEN);
+
+    // EMG Raw signal
+    Serial.print(signal);
+    // Data seprator
+    Serial.print(",");
+    // EMG envelopee
+    Serial.println(envelope);
+  }
 }
 
-// Envelop detection algorithm
-int getEnvelop(int abs_emg){
-	sum -= circular_buffer[data_index];
-	sum += abs_emg;
-	circular_buffer[data_index] = abs_emg;
-	data_index = (data_index + 1) % BUFFER_SIZE;
-	return (sum/BUFFER_SIZE) * 2;
+// envelope detection algorithm
+int getEnvelope(int abs_emg){
+  sum -= circular_buffer[data_index];
+  sum += abs_emg;
+  circular_buffer[data_index] = abs_emg;
+  data_index = (data_index + 1) % BUFFER_SIZE;
+  return (sum/BUFFER_SIZE) * 2;
 }
 
 // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
