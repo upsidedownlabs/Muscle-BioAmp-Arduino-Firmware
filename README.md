@@ -132,14 +132,15 @@ Compatibility of various boards with different sensors
 **NOTE:**  GREEN Tick (✅) signifies that the board works on the same voltage level as the sensor thus it is compatible and tested with the sensor. RED cross :x: shows that the board and sensor work on different voltages thus they are not directly compatible. The sensor will not work when it's VCC is connected to a development board VCC that is working on lower voltage due to the minimum required voltage (5V) for the sensor to work properly. It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground, and create a resistors divider to convert higher voltage output of the sensor to lower voltage level of development board so the sensor doesn't harm the development board's analog pins.
 
 **NOTE:** 
-1. GREEN Tick (✅) signifies that the development board works on the same voltage level as the sensor, thus it is compatible to use them together.
+1. GREEN Tick (✅) signifies that the development board works on the same voltage level as the sensor, thus it is compatible.
 2. RED cross (❌) shows that the development board and sensor work on different voltages, thus they are not directly compatible. 
-The issue:
+
+The issue:<br>
 Some of the sensors mentioned above are having a minimum required voltage of 5V. Thus, they will not work properly when their VCC terminal is connected to a development board's VCC that is working on a lower voltage level (For example: 3.3V). 
 
-How to resolve the issue?
-(Image can be inserted here)
-It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground and create a resistor divider to convert the higher voltage output of the sensor to lower voltage level so as to make it compatible with the development board. This step is crucial to prevent the sensor to harm the analog pins of development board
+How to resolve the issue?<br>
+It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground and create a resistor divider to convert the higher voltage output of the sensor to lower voltage level so as to make it compatible with the development board. This step is crucial to prevent the sensor to harm the analog pins of development board.<br>
+(Image can be inserted here)<br>
 
 
 ## Examples
