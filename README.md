@@ -129,8 +129,6 @@ Compatibility of various boards with different sensors
     </tbody>
 </table>
 
-**NOTE:**  GREEN Tick (✅) signifies that the board works on the same voltage level as the sensor thus it is compatible and tested with the sensor. RED cross :x: shows that the board and sensor work on different voltages thus they are not directly compatible. The sensor will not work when it's VCC is connected to a development board VCC that is working on lower voltage due to the minimum required voltage (5V) for the sensor to work properly. It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground, and create a resistors divider to convert higher voltage output of the sensor to lower voltage level of development board so the sensor doesn't harm the development board's analog pins.
-
 **NOTE:** 
 1. GREEN Tick (✅) signifies that the development board works on the same voltage level as the sensor, thus it is compatible.
 2. RED cross (❌) shows that the development board and sensor work on different voltages, thus they are not directly compatible. 
