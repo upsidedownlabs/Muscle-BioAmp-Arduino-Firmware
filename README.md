@@ -11,6 +11,137 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |6 | [LEDBarGraph](6_LEDBarGraph)| LED bar graph representing EMG Amplitude.|
 |7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength |
 
+Compatibility of various boards with different sensors
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Development Board</th>
+            <th>Sensor</th>
+            <th>Compatibility</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="6">1</td>
+            <td rowspan="6">Arduino UNO R3<br>Maker UNO</td>
+            <td>Bioamp EXG Pill</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td rowspan="6">2</td>
+            <td rowspan="6">Arduino UNO R4 Minima<br>Arduino UNO R4 Wifi</td>
+            <td>Bioamp EXG Pill</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td rowspan="6">3</td>
+            <td rowspan="6">Raspberry Pi Pico</td>
+            <td>Bioamp EXG Pill</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td>❌</td>
+        </tr>
+       <tr>
+             <td rowspan="6">4</td>
+            <td rowspan="6">ESP32 C3 MINI</td>
+            <td>Bioamp EXG Pill</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td>❌</td>
+        </tr>
+    </tbody>
+</table>
+
+**NOTE:** 
+1. GREEN Tick (✅) signifies that the development board works on the same voltage level as the sensor, thus it is compatible.
+2. RED cross (❌) shows that the development board and sensor work on different voltages, thus they are not directly compatible. 
+
+The issue:<br>
+Some of the sensors mentioned above are having a minimum required voltage of 5V. Thus, they will not work properly when their VCC terminal is connected to a development board's VCC that is working on a lower voltage level (For example: 3.3V). 
+
+How to resolve the issue?<br>
+It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground and create a resistor divider to convert the higher voltage output of the sensor to lower voltage level so as to make it compatible with the development board. This step is crucial to prevent the sensor to harm the analog pins of development board.<br>
+
+![29cd87b6-1133-4b6e-b7ac-5b7ffa1a7d91](https://github.com/Aryan-Prakhar/Muscle-BioAmp-Arduino-Firmware/assets/97614212/1a3765af-205d-463e-9560-d68d43c711c5)
+<br>
+
 
 ## Examples
 
