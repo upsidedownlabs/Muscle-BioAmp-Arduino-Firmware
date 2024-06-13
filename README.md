@@ -138,7 +138,9 @@ Some of the sensors mentioned above are having a minimum required voltage of 5V.
 
 How to resolve the issue?<br>
 It's not recommended but to resolve this issue you can use external 5V supply for sensor, use common ground and create a resistor divider to convert the higher voltage output of the sensor to lower voltage level so as to make it compatible with the development board. This step is crucial to prevent the sensor to harm the analog pins of development board.<br>
-(Image can be inserted here)<br>
+
+![29cd87b6-1133-4b6e-b7ac-5b7ffa1a7d91](https://github.com/Aryan-Prakhar/Muscle-BioAmp-Arduino-Firmware/assets/97614212/1a3765af-205d-463e-9560-d68d43c711c5)
+<br>
 
 
 ## Examples
