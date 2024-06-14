@@ -136,7 +136,7 @@ Compatibility of various boards with different sensors
             <td align= "center" rowspan="6" >ARDUINO DUE</td>
            <td align = "center" rowspan="6">12 bits</td>
             <td>Bioamp EXG Pill</td>
-            <td>❌</td>
+            <td>✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Candy</td>
@@ -144,11 +144,11 @@ Compatibility of various boards with different sensors
         </tr>
         <tr>
             <td>Muscle Bioamp Patchy</td>
-            <td>❌</td>
+            <td>✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Blip</td>
-            <td>❌</td>
+            <td>✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Biscute</td>
@@ -156,7 +156,7 @@ Compatibility of various boards with different sensors
         </tr>
         <tr>
             <td>Muscle Bioamp Shield</td>
-            <td>❌</td>
+            <td>:x:</td>
         </tr>
         <tr>
              <td rowspan="6">6</td>
