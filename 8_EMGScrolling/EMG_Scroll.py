@@ -16,7 +16,7 @@ ser = serial.Serial('COM7', 115200, timeout=1)
 # Timing variable
 timer = milis()
 
-latency =  220
+latency =  20
 
 # Infinite loop
 while True:
