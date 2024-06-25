@@ -1,5 +1,6 @@
 // EMGScrolling - BioAmp EXG Pill
 // https://github.com/upsidedownlabs/BioAmp-EXG-Pill
+// https://github.com/upsidedownlabs/Muscle-BioAmp-Arduino-Firmware
 
 // Upside Down Labs invests time and resources providing this open source code,
 // please support Upside Down Labs and open-source hardware by purchasing

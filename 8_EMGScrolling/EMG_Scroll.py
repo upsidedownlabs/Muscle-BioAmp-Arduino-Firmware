@@ -1,5 +1,6 @@
 #  EMGScrolling - BioAmp EXG Pill
 #  https://github.com/upsidedownlabs/BioAmp-EXG-Pill
+#  https://github.com/upsidedownlabs/Muscle-BioAmp-Arduino-Firmware
 
 #  Upside Down Labs invests time and resources providing this open source code,
 #  please support Upside Down Labs and open-source hardware by purchasing
@@ -38,7 +39,7 @@ def milis():
     return int(round(time.time() * 1000))
 
 # Arduino serial port interface
-# Change the COM port depending on the COM port selected
+# Change the COM port depending on the hardware used
 ser = serial.Serial('COM7', 115200, timeout=1)
 
 # Timing variable
