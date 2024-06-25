@@ -1,5 +1,5 @@
-# Human Computer Interface (HCI) 
-# scroll through the screen
+# Human Computer Interface (HCI) project example
+# Emulate Up/Down keys to move through the screen
 
 import serial
 import time
