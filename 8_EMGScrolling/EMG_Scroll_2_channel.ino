@@ -70,7 +70,7 @@ unsigned long debounceDelay = 50;
 // #define Calibrate
 
 int threshold1 = 70;
-int threshold2 = 70;
+int threshold2 = 50;
 
 void setup() {
   // Serial connection begin
