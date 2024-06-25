@@ -59,11 +59,12 @@ while True:
         if((milis() - timer) > latency):
             timer = milis()
             
-            # Virtual up and down      
+             # Emulate Up navigation key
             if(int(data)==1):
                 pyautogui.press('up')
                 print("up")
-               
+                
+            # Emulate Down navigation key
             elif(int(data)==2):
                 pyautogui.press('down')
                 print("down")
