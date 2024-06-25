@@ -35,39 +35,52 @@
 #define INPUT_PIN1 A0
 #define INPUT_PIN2 A2
 
-// change the output pins to glow different LEDs
-#define OUTPUT_PIN1 13
-#define OUTPUT_PIN2 11
+// CH1 & CH2 status LEDs
+#define CH1_STATUS_LED 13
+#define CH2_STATUS_LED 11
 
-// envelope buffer size
+// Envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
 
-//difine different constant for different envelope
+// Define different constant for different envelope
+// Channel 1 variables
 int circular_buffer1[BUFFER_SIZE];
 int data_index1, sum1;
+// Channel 2 varibles
 int circular_buffer2[BUFFER_SIZE];
 int data_index2, sum2;
 
-int threshold1 = 70;
-int threshold2 = 70;
+// Button to start the serial transaction
 const int buttonPin = 4;
-// pin 8 - shows green to start scrolling
+
+// LED to show serial transaction status
 const int ledPin = 8;
+
+// Device working status varaiables
 int ledState = LOW;
 int buttonState;
 int lastButtonState = LOW;
 unsigned long lastDebounceTime = 0;
 unsigned long debounceDelay = 50;
 
+// Calibrate threshold values
+// Uncomment the below line to view EMG envelope on serial plotter
+// #define Calibrate
+
+int threshold1 = 70;
+int threshold2 = 70;
+
 void setup() {
   // Serial connection begin
   Serial.begin(BAUD_RATE);
+  
   pinMode(INPUT_PIN1, INPUT);
-  pinMode(OUTPUT_PIN1, OUTPUT);
+  pinMode(CH1_STATUS_LED, OUTPUT);
+  
   pinMode(INPUT_PIN2, INPUT);
-  pinMode(OUTPUT_PIN2, OUTPUT);
+  pinMode(CH2_STATUS_LED, OUTPUT);
 
   pinMode(buttonPin, INPUT);
   pinMode(ledPin, OUTPUT);
@@ -125,32 +138,45 @@ void loop() {
    
     // EMG envelope
     int envelope2 = getEnvelope2(abs(signal2));
-    // LED ON when one hand move otherwise off, same for other hand
-    // envelope should be higher than the threshold and also the envelope of other hand
-    // output as "1" for op1 and "2" for op2 
+
+    // If set to calibrate show envelope data on serial monitor/plotter
+    #ifdef Calibrate
+    
+      Serial.print(envelope1);
+      Serial.print('\t');
+      Serial.println(envelope2);
+    
+    // If not set to calibrate do serial communication
+    #else
+
+      // LED ON when one hand move otherwise off, same for other hand
+      // envelope should be higher than the threshold and also the envelope of other hand
+      // output as "1" for CH1 and "2" for CH2
       if(envelope1 and ledState){
       if(envelope1 > envelope2 and envelope1 > threshold1){ 
         Serial.println("1");
-       digitalWrite(OUTPUT_PIN1,HIGH);
+       digitalWrite(CH1_STATUS_LED,HIGH);
        }
        else
-       {digitalWrite(OUTPUT_PIN1,LOW);}
+       {digitalWrite(CH1_STATUS_LED,LOW);}
        }
       if(envelope2 and ledState){
       if(envelope2 > envelope1 and envelope2 > threshold2){ Serial.println("2");
-       digitalWrite(OUTPUT_PIN2,HIGH);
+       digitalWrite(CH2_STATUS_LED,HIGH);
        }
-       else {digitalWrite(OUTPUT_PIN2,LOW);}
+       else {digitalWrite(CH2_STATUS_LED,LOW);}
        }
       if(envelope2 > threshold1 and envelope2 > threshold2) Serial.println("0");
       else Serial.println("0");
+    
+   #endif
   }
   digitalWrite(ledPin, ledState);
  lastButtonState = reading;
 }
 
-// envelope detection algorithm
-// different envelope and filters for emgs of different channel
+// Envelope detection algorithm
+// Get CH1 envelope
 int getEnvelope1(int abs_emg){
   sum1 -= circular_buffer1[data_index1];
   sum1 += abs_emg;
@@ -158,6 +184,7 @@ int getEnvelope1(int abs_emg){
   data_index1 = (data_index1 + 1) % BUFFER_SIZE;
   return (sum1/BUFFER_SIZE) * 2;
 }
+// Get CH2 envelope
 int getEnvelope2(int abs_emg){
   sum2 -= circular_buffer2[data_index2];
   sum2 += abs_emg;
@@ -173,6 +200,7 @@ int getEnvelope2(int abs_emg){
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
 
+// CH1 EMG filter
 float EMGFilter1(float input)
 {
   float output = input;
@@ -206,6 +234,8 @@ float EMGFilter1(float input)
   }
   return output;
 }
+
+// CH2 EMG filter
 float EMGFilter2(float input2)
 {
   float output = input2;
