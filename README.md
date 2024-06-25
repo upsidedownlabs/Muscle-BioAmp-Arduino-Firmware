@@ -10,7 +10,7 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |5 | [ServoControl](5_ServoControl)| Controlling the Servo Motors with EMG signals.|
 |6 | [LEDBarGraph](6_LEDBarGraph)| LED bar graph representing EMG Amplitude.|
 |7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength. |
-|7 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
+|8 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
 
 Compatibility of various boards with different sensors
 <table>
