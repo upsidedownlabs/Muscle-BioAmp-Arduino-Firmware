@@ -1,19 +1,50 @@
+// EMGScrolling - BioAmp EXG Pill
+// https://github.com/upsidedownlabs/BioAmp-EXG-Pill
+
+// Upside Down Labs invests time and resources providing this open source code,
+// please support Upside Down Labs and open-source hardware by purchasing
+// products from Upside Down Labs!
+
+// Copyright (c) 2021 - 2024 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2021 - 2024 Aryan Prakhar - aryanprakhar1010@gmail.com
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 // Samples per second
 #define SAMPLE_RATE 500
 
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
 #define INPUT_PIN1 A0
 #define INPUT_PIN2 A2
+
+// change the output pins to glow different LEDs
 #define OUTPUT_PIN1 13
 #define OUTPUT_PIN2 11
+
 // envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
 
+//difine different constant for different envelope
 int circular_buffer1[BUFFER_SIZE];
 int data_index1, sum1;
 int circular_buffer2[BUFFER_SIZE];
@@ -22,19 +53,21 @@ int data_index2, sum2;
 int threshold1 = 70;
 int threshold2 = 70;
 const int buttonPin = 4;
+// pin 8 - shows green to start scrolling
 const int ledPin = 8;
 int ledState = LOW;
 int buttonState;
 int lastButtonState = LOW;
 unsigned long lastDebounceTime = 0;
 unsigned long debounceDelay = 50;
+
 void setup() {
   // Serial connection begin
   Serial.begin(BAUD_RATE);
   pinMode(INPUT_PIN1, INPUT);
   pinMode(OUTPUT_PIN1, OUTPUT);
-  pinMode(INPUT_PIN1, INPUT);
-  pinMode(OUTPUT_PIN1, OUTPUT);
+  pinMode(INPUT_PIN2, INPUT);
+  pinMode(OUTPUT_PIN2, OUTPUT);
 
   pinMode(buttonPin, INPUT);
   pinMode(ledPin, OUTPUT);
@@ -63,6 +96,7 @@ void loop() {
       }
     }
   }
+ 
   // Calculate elapsed time
   static unsigned long past = 0;
   unsigned long present = micros();
@@ -91,15 +125,23 @@ void loop() {
    
     // EMG envelope
     int envelope2 = getEnvelope2(abs(signal2));
-
- 
-
-      digitalWrite(OUTPUT_PIN1,envelope1 > envelope2 and envelope1 > threshold1);
-      digitalWrite(OUTPUT_PIN2, envelope2 > envelope1 and envelope2 > threshold2 );
+    // LED ON when one hand move otherwise off, same for other hand
+    // envelope should be higher than the threshold and also the envelope of other hand
+    // output as "1" for op1 and "2" for op2 
       if(envelope1 and ledState){
-      if(envelope1 > envelope2 and envelope1 > threshold1) Serial.println("1");}
+      if(envelope1 > envelope2 and envelope1 > threshold1){ 
+        Serial.println("1");
+       digitalWrite(OUTPUT_PIN1,HIGH);
+       }
+       else
+       {digitalWrite(OUTPUT_PIN1,LOW);}
+       }
       if(envelope2 and ledState){
-      if(envelope2 > envelope1 and envelope2 > threshold2) Serial.println("2");}
+      if(envelope2 > envelope1 and envelope2 > threshold2){ Serial.println("2");
+       digitalWrite(OUTPUT_PIN2,HIGH);
+       }
+       else {digitalWrite(OUTPUT_PIN2,LOW);}
+       }
       if(envelope2 > threshold1 and envelope2 > threshold2) Serial.println("0");
       else Serial.println("0");
   }
@@ -108,6 +150,7 @@ void loop() {
 }
 
 // envelope detection algorithm
+// different envelope and filters for emgs of different channel
 int getEnvelope1(int abs_emg){
   sum1 -= circular_buffer1[data_index1];
   sum1 += abs_emg;
@@ -129,6 +172,7 @@ int getEnvelope2(int abs_emg){
 // Reference: 
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
+
 float EMGFilter1(float input)
 {
   float output = input;
