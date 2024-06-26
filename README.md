@@ -9,7 +9,8 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |4 | [ClawController](4_ClawController)| Servo Claw Controller.|
 |5 | [ServoControl](5_ServoControl)| Controlling the Servo Motors with EMG signals.|
 |6 | [LEDBarGraph](6_LEDBarGraph)| LED bar graph representing EMG Amplitude.|
-|7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength |
+|7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength. |
+|8 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
 
 Compatibility of various boards with different sensors
 <table>
@@ -17,6 +18,7 @@ Compatibility of various boards with different sensors
         <tr>
             <th>No.</th>
             <th>Development Board</th>
+             <th>Maximum ADC Resolution</th>
             <th>Sensor</th>
             <th>Compatibility</th>
         </tr>
@@ -24,107 +26,165 @@ Compatibility of various boards with different sensors
     <tbody>
         <tr>
             <td rowspan="6">1</td>
-            <td rowspan="6">Arduino UNO R3<br>Maker UNO</td>
+            <td align= "center" rowspan="6">Arduino UNO R3<br>&<br>Maker UNO</td>
+            <td align = "center" rowspan="6">10 bits</td>
             <td>Bioamp EXG Pill</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Candy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Patchy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Blip</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Biscute</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Shield</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td rowspan="6">2</td>
-            <td rowspan="6">Arduino UNO R4 Minima<br>Arduino UNO R4 Wifi</td>
+            <td align = "center" rowspan="6">Arduino UNO R4 Minima<br>&<br>Arduino UNO R4 Wifi</td>
+            <td align = "center"rowspan="6">14 bits</td>
             <td>Bioamp EXG Pill</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Candy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Patchy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Blip</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Biscute</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Shield</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td rowspan="6">3</td>
-            <td rowspan="6">Raspberry Pi Pico</td>
+            <td align = "center" rowspan="6">Raspberry Pi Pico</td>
+            <td align = "center" rowspan="6">12 bits</td>
             <td>Bioamp EXG Pill</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Candy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Patchy</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Blip</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Biscute</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Shield</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
        <tr>
              <td rowspan="6">4</td>
-            <td rowspan="6">ESP32 C3 MINI</td>
+            <td align= "center" rowspan="6" >ESP32 C3 MINI</td>
+           <td align = "center" rowspan="6">12 bits</td>
             <td>Bioamp EXG Pill</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Candy</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Patchy</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Blip</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Biscute</td>
-            <td>✅</td>
+            <td align = "center" >✅</td>
         </tr>
         <tr>
             <td>Muscle Bioamp Shield</td>
-            <td>❌</td>
+            <td align = "center" >❌</td>
+        </tr>
+        <tr>
+             <td rowspan="6">5</td>
+            <td align= "center" rowspan="6" >Arduino Due</td>
+           <td align = "center" rowspan="6">12 bits</td>
+            <td>Bioamp EXG Pill</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td align= "center">:x:</td>
+        </tr>
+        <tr>
+             <td rowspan="6">6</td>
+            <td align= "center" rowspan="6" >Arduino Nano</td>
+           <td align = "center" rowspan="6">10 bits</td>
+            <td>Bioamp EXG Pill</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Candy</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Patchy</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Blip</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Biscute</td>
+            <td align = "center" >✅</td>
+        </tr>
+        <tr>
+            <td>Muscle Bioamp Shield</td>
+            <td align = "center" >❌</td>
         </tr>
     </tbody>
 </table>
