@@ -11,6 +11,8 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |6 | [LEDBarGraph](6_LEDBarGraph)| LED bar graph representing EMG Amplitude.|
 |7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength. |
 |8 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
+|9 | [2Channel_LCDBarGraph](9_2Channel_LCDBarGraph)| LCD bar graph representing EMG Amplitude using 2 Channel |
+
 
 Compatibility of various boards with different sensors
 <table>
