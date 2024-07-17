@@ -28,9 +28,12 @@
 // SOFTWARE.
 
 #include <LiquidCrystal_I2C.h>
+// By Marco Schwartz  
+//https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/LiquidCrystal_I2C.h
 #include <Wire.h> 
 
 // Initialize LCD object with I2C address 0x27, 16 columns and 2 rows
+// serial LCD I2C module- PCF8574
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Custom character definition
@@ -50,9 +53,10 @@ byte fullBlock[8] = {
 
 // Serial communication baud rate
 #define BAUD_RATE 115200
-
+//Connected directly to Analog Electrodes port of Muscle Bioamp Shield
 #define INPUT_PIN1 A0
-#define INPUT_PIN2 A2
+//Connected to A2 Analog port of Muscle Bioamp Shield through Muscle Bioamp Patchy
+#define INPUT_PIN2 A2  
 
 // Buffer size for envelope detection
 // Higher value: smoother but less responsive
