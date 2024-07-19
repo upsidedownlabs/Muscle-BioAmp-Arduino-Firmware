@@ -1,13 +1,12 @@
-// 2Channel_LCDBarGraph- BioAmp EXG Pill
-// https://github.com/upsidedownlabs/BioAmp-EXG-Pill
+// 2Channel_LCDBarGraph- Muscle Bioamp Patchy
 // https://github.com/upsidedownlabs/Muscle-BioAmp-Arduino-Firmware
 
 // Upside Down Labs invests time and resources providing this open source code,
 // please support Upside Down Labs and open-source hardware by purchasing
 // products from Upside Down Labs!
 
-// Copyright (c) 2021 - 2024 Upside Down Labs - contact@upsidedownlabs.tech
-// Copyright (c) 2021 - 2024 Aryan Prakhar - aryanprakhar1010@gmail.com
+// Copyright (c) 2021 - 2024 Upside Down Labs - contact [at] upsidedownlabs.tech
+// Copyright (c) 2021 - 2024 Aryan Prakhar - aryanprakhar1010 [at] gmail.com
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <LiquidCrystal_I2C.h>
+// Libraries required
 // By Marco Schwartz  
 //https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/LiquidCrystal_I2C.h
+#include <LiquidCrystal_I2C.h>
 #include <Wire.h> 
 
 // Initialize LCD object with I2C address 0x27, 16 columns and 2 rows
-// serial LCD I2C module- PCF8574
+// Serial LCD I2C module- PCF8574
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Custom character definition
