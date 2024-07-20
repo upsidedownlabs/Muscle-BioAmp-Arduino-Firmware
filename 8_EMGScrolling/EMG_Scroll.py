@@ -33,6 +33,7 @@
 import serial
 import time
 import pyautogui
+from DetectComPort import find_responsive_port
 
 # return time in ms
 def milis():
@@ -40,7 +41,7 @@ def milis():
 
 # Arduino serial port interface
 # Change the COM port depending on the hardware used
-ser = serial.Serial('COM7', 115200, timeout=1)
+ser = serial.Serial(find_responsive_port(), 115200, timeout=1)
 
 # Timing variable
 timer = milis()
@@ -70,6 +71,6 @@ while True:
                 pyautogui.press('down')
                 print("down")
                 
-    except Exception as e:
-        print(e, "\nMove now...")
+    except Exception:
+        print("Move now...")
         continue

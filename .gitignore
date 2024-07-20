@@ -33,3 +33,9 @@
 
 # Backups
 *.backup
+
+# virtualenv
+venv/
+
+# Code Editor
+.vscode/
