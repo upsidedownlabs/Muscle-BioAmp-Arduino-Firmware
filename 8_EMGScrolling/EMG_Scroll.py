@@ -40,7 +40,6 @@ def milis():
     return int(round(time.time() * 1000))
 
 # Arduino serial port interface
-# Change the COM port depending on the hardware used
 ser = serial.Serial(find_responsive_port(), 115200, timeout=1)
 
 # Timing variable
@@ -71,6 +70,6 @@ while True:
                 pyautogui.press('down')
                 print("down")
                 
-    except Exception:
-        print("Move now...")
+    except Exception as e:
+        print(e, "Move now...")
         continue
