@@ -70,6 +70,6 @@ while True:
                 pyautogui.press('down')
                 print("down")
                 
-    except Exception:
-        print("Move now...")
+    except Exception as e:
+        print(e, "Move now...")
         continue
