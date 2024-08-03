@@ -12,6 +12,8 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength. |
 |8 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
 |9 | [2Channel_LCDBarGraph](9_2Channel_LCDBarGraph)| LCD bar graph representing EMG Amplitude using 2 Channel |
+|10 | [EMG_Rehab_Game](10_EMG_Rehab_Game)| A EMG game for persons going through rehabilitation to monitor their progress|
+|11 | [EMG_Counter](11_EMG_Counter)| Counter to count number of times EMG exceed threshold value in a time interval |
 
 
 Compatibility of various boards with different sensors
