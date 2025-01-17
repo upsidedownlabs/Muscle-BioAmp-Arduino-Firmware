@@ -3,17 +3,18 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 
 | No. | Program| Description |
 | ---- | ---- | ---- |
-|1 | [FixedSampling](1_FixedSampling)| Sample from ADC at a fixed rate for easy processing of signal.|
-|2 | [EMGFilter](2_EMGFilter)| A 74.5 - 149.5 Hz band pass filter sketch for clean Electromyography.|
-|3 | [EMGEnvelop](3_EMGEnvelop)| EMG signal envelop detection for robotics and biomedical applications.|
-|4 | [ClawController](4_ClawController)| Servo Claw Controller.|
-|5 | [ServoControl](5_ServoControl)| Controlling the Servo Motors with EMG signals.|
-|6 | [LEDBarGraph](6_LEDBarGraph)| LED bar graph representing EMG Amplitude.|
-|7 | [MuscleStrengthGame](7_MuscleStrengthGame)| Measure your muscle strength. |
-|8 | [EMGScrolling](8_EMGScrolling)| Scrolling through screen using hands. |
-|9 | [2Channel_LCDBarGraph](9_2Channel_LCDBarGraph)| LCD bar graph representing EMG Amplitude using 2 Channel |
+|1 | [Fixed_Sampling](01_Fixed_Sampling)| Sample from ADC at a fixed rate for easy processing of signal.|
+|2 | [EMG_Filter](02_EMG_Filter)| A 74.5 - 149.5 Hz band pass filter sketch for clean Electromyography.|
+|3 | [EMG_Envelope](03_EMG_Envelope)| EMG signal envelope detection for robotics and biomedical applications.|
+|4 | [Claw_Controller](04_Claw_Controller)| Servo Claw Controller.|
+|5 | [Servo_Control](05_Servo_Control)| Controlling the Servo Motors with EMG signals.|
+|6 | [LED_BarGraph](06_LED_BarGraph)| LED bar graph representing EMG Amplitude.|
+|7 | [Muscle_Strength_Game](07_Muscle_Strength_Game)| Measure your muscle strength. |
+|8 | [EMG_Scrolling](08_EMG_Scrolling)| Scrolling through screen using hands. |
+|9 | [2Channel_LCD_BarGraph](09_2Channel_LCD_BarGraph)| LCD bar graph representing EMG Amplitude using 2 Channel |
 |10 | [EMG_Rehab_Game](10_EMG_Rehab_Game)| A EMG game for persons going through rehabilitation to monitor their progress|
 |11 | [EMG_Counter](11_EMG_Counter)| Counter to count number of times EMG exceed threshold value in a time interval |
+|12 | [2CH_EMG_Game_Controller](12_2CH_EMG_Game_Controller)| An EMG game Controller to play games using hand gestures |
 
 
 Compatibility of various boards with different sensors
