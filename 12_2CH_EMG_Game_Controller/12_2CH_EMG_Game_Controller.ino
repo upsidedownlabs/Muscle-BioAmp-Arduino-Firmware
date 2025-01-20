@@ -157,7 +157,7 @@ void loop() {
       { 
         if(envelope2>10)
         {
-          Serial.println("3");
+          Serial.println("4");
         }
         else
         {
@@ -166,9 +166,9 @@ void loop() {
       }
       else if(envelope2 > envelope1 and envelope2 > 40)
       { 
-        if(envelope1>25)
+        if(envelope1>20)
         {
-          Serial.println("3");
+          Serial.println("5");
         }
         else
         {
