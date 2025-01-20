@@ -2,6 +2,17 @@
 
 This project transforms your muscle activity into keyboard keystrokes, enabling gesture-based control for gaming or other applications. By combining Arduino and Python, you can create a custom, gesture-controlled setup. Follow this guide to set up, test, and customize your EMG-based game controller.
 
+## Gesture Mapping with Photos
+
+| Gesture Description                  | Triggered Action            | Example Photo                          |
+|--------------------------------------|-----------------------------|----------------------------------------|
+| No muscle activity detected          | No keystroke                | ![No Activity](Media//0.jpg)|
+| Bend hand to the left                | Left Arrow Key              | ![Left Bend](Media/1.jpg)    |
+| Bend hand to the right               | Right Arrow Key             | ![Right Bend](Media/2.jpg)  |
+| Flex fingers                         | Up Arrow Key                | ![Flex Fingers](Media/3.jpg) |
+| Flex fingers + Bend hand to the left | Left + Up Arrow Keys        | ![Flex Left](Media/4.jpg)    |
+| Flex fingers + Bend hand to the right| Right + Up Arrow Keys       | ![Flex Right](Media/5.jpg  )  |
+
 ---
 
 ## Table of Contents
@@ -22,6 +33,22 @@ Before you begin, ensure you have the following:
   - [Python](https://www.python.org/downloads)
   - Necessary Python modules (detailed in the Python script or README in the repository).
 
+**Step 1: Stack Muscle BioAmp Shield on Arduino Uno**
+![](Media/step%201.gif)
+
+**Step 2: Configure BioAmp EXG Pill for EMG/ECG (Optional)**
+![](Media/Step%202.jpg)
+BioAmp EXG Pill is by default configured for recording EEG or EOG but if you want to record good quality ECG or EMG, then it is recommended to configure it by making a solder joint as shown in the image.
+
+Note: Even without making the solder joint the BioAmp EXG Pill is capable of recording ECG or EMG but the signals would be more accurate if you configure it.
+
+**Step 3: Connecting BioAmp EXG Pill**
+![](Media/step%203.gif)
+Connect the BioAmp EXG Pill to the A2 port of Muscle BioAmp Shield via 3-pin STEMMA cable which has JST PH 2.0mm connector on one end and 3 female jumpers on the other end.
+
+**Step 4: Connecting Electrode Cables**
+![](Media/step%204.gif)
+Connect one BioAmp cable to BioAmp EXG Pill and another BioAmp cable to Muscle BioAmp Shield by inserting the cable ends into the respective JST PH connectors as shown above.
 ---
 
 ## Uploading the Code
