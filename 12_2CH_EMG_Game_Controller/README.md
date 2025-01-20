@@ -96,8 +96,15 @@ Before you begin, ensure you have the following:
 
 2. **Run the Python Script**:
    - Open the `12_2CH_EMG_Game_Controller.py` script in [Visual Studio Code](https://code.visualstudio.com/) or any Python IDE.
-   - Ensure all required Python modules are installed (commands available in the repository README).
-   - Run the script. It will automatically detect your Arduino's COM port.
+   - Ensure all required Python modules are installed by running the following command:
+      ```python
+     pip install -r requirements.txt
+     ```
+   - Run the script using the command:
+     ```python
+     python 12_2CH_EMG_Game_Controller.py
+     ```
+   - It will automatically detect your Arduino's COM port.
    - If the port isn’t detected, manually edit the COM port in the script:
      ```python
      ser = serial.Serial("COM_PORT_HERE", 115200)
