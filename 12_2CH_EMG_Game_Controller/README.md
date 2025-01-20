@@ -70,8 +70,7 @@ Before you begin, ensure you have the following:
    - Open the `12_2CH_EMG_Game_Controller.ino` file in Arduino IDE.
 
 3. **Configure Arduino IDE**:
-   - Select the correct **COM port** and **board** under the **Tools** menu.
-   - If you’re unsure about these settings, refer to the quick guide in the repository.
+   - Select the correct **COM port** and **board**(which says the name of the device such as Arduino UNO R3) under the **Tools** menu.
 
 4. **Upload the Code**:
    - Click the **Upload** button. A progress bar will indicate the upload status.
@@ -84,9 +83,9 @@ Before you begin, ensure you have the following:
 
 ## Testing & Playing
 
-1. **Test with the Serial Monitor**:
+1. **Select the correct Test with the Serial Monitor**:
    - Open the Serial Monitor in Arduino IDE.
-   - Set the baud rate to **115200**.
+   - Ensure the correct baud rate (e.g., 115200) is selected in the code and matches the Serial Monitor settings.
    - Observe real-time outputs:
      - `0`: No muscle activity detected, no keystroke triggered.
      - `1`: Bend your hand to the left, triggering the **Left Arrow** key.
