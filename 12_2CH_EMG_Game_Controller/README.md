@@ -1,17 +1,18 @@
 # EMG-Based Game Controller
 
 This project transforms your muscle activity into keyboard keystrokes, enabling gesture-based control for gaming or other applications. By combining Arduino and Python, you can create a custom, gesture-controlled setup. Follow this guide to set up, test, and customize your EMG-based game controller.
+It is currently available in two versions: Basic and Advanced. The Basic version is designed to cater to a broad audience with generalized features, while the Advanced version is optimized for better performance but may vary and be less accurate for different users.
 
 ## Gesture Mapping with Photos
 
-| Gesture Description                  | Triggered Action            | Example Photo                          |
-|--------------------------------------|-----------------------------|----------------------------------------|
-| No muscle activity detected          | No keystroke                | <img src="Media/0.jpg" alt="No Activity" width="200"> |
-| Bend hand to the left                | Left Arrow Key              | <img src="Media/1.jpg" alt="Left Bend" width="200">    |
-| Bend hand to the right               | Right Arrow Key             | <img src="Media/2.jpg" alt="Right Bend" width="200">   |
-| Flex fingers                         | Up Arrow Key                | <img src="Media/3.jpg" alt="Flex Fingers" width="200"> |
-| Flex fingers + Bend hand to the left | Left + Up Arrow Keys        | <img src="Media/4.jpg" alt="Flex Left" width="200">    |
-| Flex fingers + Bend hand to the right| Right + Up Arrow Keys       | <img src="Media/5.jpg" alt="Flex Right" width="200">   |
+| Gesture Description                            | Triggered Action            | Example Photo                          |
+|------------------------------------------------|-----------------------------|----------------------------------------|
+| No muscle activity detected                    | No keystroke                | <img src="Media/0.jpg" alt="No Activity" width="200">  |
+| Bend hand to the left                          | Left Arrow Key              | <img src="Media/1.jpg" alt="Left Bend" width="200">    |
+| Bend hand to the right                         | Right Arrow Key             | <img src="Media/2.jpg" alt="Right Bend" width="200">   |
+| Flex fingers                                   | Up Arrow Key                | <img src="Media/3.jpg" alt="Flex Fingers" width="200"> |
+| Flex fingers + Bend hand to the left (Advanced)| Left + Up Arrow Keys        | <img src="Media/4.jpg" alt="Flex Left" width="200">    |
+| Flex fingers + Bend hand to the right(Advanced)| Right + Up Arrow Keys       | <img src="Media/5.jpg" alt="Flex Right" width="200">   |
 
 ---
 
@@ -110,8 +111,8 @@ Before you begin, ensure you have the following:
      - `1`: Bend your hand to the left, triggering the **Left Arrow** key.
      - `2`: Bend your hand to the right, triggering the **Right Arrow** key.
      - `3`: Flex your fingers, triggering the **Up Arrow** key.
-     - `4`: Flex your fingers while bending your hand to the left, triggering the **Left Arrow** key and **Up Arrow** key.
-     - `5`: Flex your fingers while bending your hand to the right, triggering the **Right Arrow** key and **Up Arrow** key.
+     - `4`: Flex your fingers while bending your hand to the left, triggering the **Left Arrow** key and **Up Arrow** key. (Advanced)
+     - `5`: Flex your fingers while bending your hand to the right, triggering the **Right Arrow** key and **Up Arrow** key. (Advanced)
 
 2. **Run the Python Script**:
    - Open the `12_2CH_EMG_Game_Controller.py` script in [Visual Studio Code](https://code.visualstudio.com/) or any Python IDE.
