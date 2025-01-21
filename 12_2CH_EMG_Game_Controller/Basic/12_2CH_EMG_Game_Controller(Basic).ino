@@ -155,34 +155,16 @@ void loop() {
       // output as "1" for CH1 and "2" for CH2
       if(envelope1 > envelope2 and envelope1 > 50 and envelope2 < 20)
       { 
-        if(envelope2>10)
-        {
-          Serial.println("4");
-        }
-        else
-        {
         Serial.println("1");
-        }
       }
       else if(envelope2 > envelope1 and envelope2 > 40)
       { 
-        if(envelope1>20)
-        {
-          Serial.println("5");
-        }
-        else
-        {
         Serial.println("2");
-        }
       }
       else if(envelope1 > 20 and envelope1 < 50 and envelope2 < 40 and envelope2 > 10)
       { 
         Serial.println("3");
       }
-      // else if(envelope1 <6 and envelope2 < 20 and envelope2 > 10)
-      // { 
-      //   Serial.println("4");
-      // }
       else
       { 
         Serial.println("0");
