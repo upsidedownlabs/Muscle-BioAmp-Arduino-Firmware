@@ -35,7 +35,7 @@ Before you begin, ensure you have the following:
   - Necessary Python modules (detailed in the Python script or README in the repository).
 
 <div style="margin-bottom: 20px;">
-  <h4 style="font-size: larger;">Step 1: Stack Muscle BioAmp Shield on Arduino Uno</h4>
+  <h4 style="font-size: 20px;">Step 1: Stack Muscle BioAmp Shield on Arduino Uno</h4>
   <p>Stack the Muscle BioAmp Shield securely on the Arduino Uno board.</p>
   <img src="Media/step%201.gif" alt="Step 1" style="display: block; margin: 10px auto; width: 400px;">
 </div>
@@ -73,8 +73,8 @@ Before you begin, ensure you have the following:
   <img src="Media/step%206-1.gif" alt="Step 6" style="display: block; margin: 10px auto; width: 400px;">
   <p>Now snap the BioAmp Cable connected to Muscle BioAmp Shield to gel electrodes. Peel the plastic backing from electrodes.</p>
   <p>Place the IN+ and IN- cables on the brachioradialis muscle & REF (reference) at the bony part near your elbow as shown below.</p>
-  <p>Just make sure to place the IN+, IN- electrodes on the targeted muscle and REF on a bony part.</p>
   <img src="Media/step%206-2.gif" alt="Step 6" style="display: block; margin: 10px auto; width: 400px;">
+  <p>Just make sure to place the IN+, IN- electrodes on the targeted muscle and REF on a bony part.</p>
 </div>
 
 ---
