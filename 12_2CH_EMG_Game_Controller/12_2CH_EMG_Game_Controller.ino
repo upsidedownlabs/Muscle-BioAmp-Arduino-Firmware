@@ -1,4 +1,4 @@
-// EMGScrolling - BioAmp EXG Pill
+// EMGGAMECONTROLLER - BioAmp EXG Pill
 // https://github.com/upsidedownlabs/BioAmp-EXG-Pill
 // https://github.com/upsidedownlabs/Muscle-BioAmp-Arduino-Firmware
 
