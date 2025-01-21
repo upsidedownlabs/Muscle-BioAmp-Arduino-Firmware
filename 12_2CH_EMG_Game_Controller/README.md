@@ -58,6 +58,7 @@ Before you begin, ensure you have the following:
   <p>Connect one BioAmp cable to BioAmp EXG Pill and another to Muscle BioAmp Shield by inserting the cable ends into the respective JST PH connectors, as shown below.</p>
   <img src="Media/step%204.gif" alt="Step 4" style="display: block; margin: 10px auto; width: 400px;">
 </div>
+
 ---
 
 ## Uploading the Code
