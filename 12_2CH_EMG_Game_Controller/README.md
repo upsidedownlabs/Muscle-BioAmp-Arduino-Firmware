@@ -59,6 +59,7 @@ Before you begin, ensure you have the following:
   <img src="Media/step%204.gif" alt="Step 4" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
+<<<<<<< HEAD
 <div style="margin-bottom: 20px;">
   <h4>Step 5: Skin Preparation</h4>
   <p>We’ll create a 2-channel EMG acquisition system to record EMG signals from the finger extensor muscle and the brachioradialis muscle, Thus, prepare the skin accordingly.</p>
@@ -76,6 +77,8 @@ Before you begin, ensure you have the following:
   <p>Just make sure to place the IN+, IN- electrodes on the targeted muscle and REF on a bony part.</p>
   <img src="Media/step%206-2.gif" alt="Step 6" style="display: block; margin: 10px auto; width: 400px;">
 </div>
+=======
+>>>>>>> 8ab4d7a3dba51e616cc654c29479d7faf2d479f0
 ---
 
 ## Uploading the Code
