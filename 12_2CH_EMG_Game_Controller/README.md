@@ -44,7 +44,7 @@ Before you begin, ensure you have the following:
   <h3>Step 2: Configure BioAmp EXG Pill for EMG/ECG (Optional)</h3>
   <p>BioAmp EXG Pill is by default configured for recording EEG or EOG, but for better ECG or EMG quality, it's recommended to configure it by making a solder joint as shown in the image below.</p>
   <p>Note: Even without making the solder joint, BioAmp EXG Pill can record ECG or EMG, but the signals will be more accurate if configured.</p>
-  <img src="Media/step%202.jpg" alt="Step 2" style="display: block; margin: 10px auto; width: 400px;">
+  <img src="Media/step2.jpg" alt="Step 2" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
 <div style="margin-bottom: 20px;">
