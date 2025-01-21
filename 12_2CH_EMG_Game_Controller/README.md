@@ -35,40 +35,39 @@ Before you begin, ensure you have the following:
   - Necessary Python modules (detailed in the Python script or README in the repository).
 
 <div style="margin-bottom: 20px;">
-  <h4>Step 1: Stack Muscle BioAmp Shield on Arduino Uno</h4>
+  <h4 style="font-size: larger;">Step 1: Stack Muscle BioAmp Shield on Arduino Uno</h4>
   <p>Stack the Muscle BioAmp Shield securely on the Arduino Uno board.</p>
   <img src="Media/step%201.gif" alt="Step 1" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
 <div style="margin-bottom: 20px;">
-  <h4>Step 2: Configure BioAmp EXG Pill for EMG/ECG (Optional)</h4>
+  <h4 style="font-size: larger;">Step 2: Configure BioAmp EXG Pill for EMG/ECG (Optional)</h4>
   <p>BioAmp EXG Pill is by default configured for recording EEG or EOG, but for better ECG or EMG quality, it's recommended to configure it by making a solder joint as shown in the image below.</p>
   <p>Note: Even without making the solder joint, BioAmp EXG Pill can record ECG or EMG, but the signals will be more accurate if configured.</p>
   <img src="Media/step%202.jpg" alt="Step 2" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
 <div style="margin-bottom: 20px;">
-  <h4>Step 3: Connecting BioAmp EXG Pill</h4>
+  <h4 style="font-size: larger;">Step 3: Connecting BioAmp EXG Pill</h4>
   <p>Connect the BioAmp EXG Pill to the A2 port of Muscle BioAmp Shield via a 3-pin STEMMA cable with a JST PH 2.0mm connector on one end and 3 female jumpers on the other.</p>
   <img src="Media/step%203.gif" alt="Step 3" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
 <div style="margin-bottom: 20px;">
-  <h4>Step 4: Connecting Electrode Cables</h4>
+  <h4 style="font-size: larger;">Step 4: Connecting Electrode Cables</h4>
   <p>Connect one BioAmp cable to BioAmp EXG Pill and another to Muscle BioAmp Shield by inserting the cable ends into the respective JST PH connectors, as shown below.</p>
   <img src="Media/step%204.gif" alt="Step 4" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
-<<<<<<< HEAD
 <div style="margin-bottom: 20px;">
-  <h4>Step 5: Skin Preparation</h4>
+  <h4 style="font-size: larger;">Step 5: Skin Preparation</h4>
   <p>We’ll create a 2-channel EMG acquisition system to record EMG signals from the finger extensor muscle and the brachioradialis muscle, Thus, prepare the skin accordingly.</p>
   <p>Apply Nuprep Skin Preparation Gel on the skin surface where electrodes would be placed to remove dead skin cells and clean the skin from dirt. After rubbing the skin surface thoroughly, clean it with an alcohol wipe or a wet wipe.</p>
   <img src="Media/step%205.gif" alt="Step 5" style="display: block; margin: 10px auto; width: 400px;">
 </div>
 
 <div style="margin-bottom: 20px;">
-  <h4>Step 6: Electrode Placements</h4>
+  <h4 style="font-size: larger;">Step 6: Electrode Placements</h4>
   <p>Snap the BioAmp Cable connected to the BioAmp EXG Pill to gel electrodes. Peel the plastic backing from the electrodes.</p>
   <p>Place the IN+ and IN- cables on the finger extensor muscle & REF (reference) at the back of your elbow bone as shown below.</p>
   <img src="Media/step%206-1.gif" alt="Step 6" style="display: block; margin: 10px auto; width: 400px;">
@@ -77,7 +76,7 @@ Before you begin, ensure you have the following:
   <p>Just make sure to place the IN+, IN- electrodes on the targeted muscle and REF on a bony part.</p>
   <img src="Media/step%206-2.gif" alt="Step 6" style="display: block; margin: 10px auto; width: 400px;">
 </div>
-=======
+
 ---
 
 ## Uploading the Code
