@@ -1,7 +1,8 @@
 # EMG-Based Game Controller
 
 This project transforms your muscle activity into keyboard keystrokes, enabling gesture-based control for gaming or other applications. By combining Arduino and Python, you can create a custom, gesture-controlled setup. Follow this guide to set up, test, and customize your EMG-based game controller.
-It is currently available in two versions: Basic and Advanced. The Basic version is designed to cater to a broad audience with generalized features, while the Advanced version is optimized for better performance but may vary and be less accurate for different users.
+It is currently available in two versions: Basic and Advanced. The Basic version is designed to cater to a broad audience with generalized features, while the Advanced version is optimized for better performance but may vary and be less accurate for different users. 
+You can also checkout our detailed tutorial on https://www.instructables.com/Controlling-Video-Games-Using-Muscle-Signals-EMG/
 
 ## Gesture Mapping with Photos
 
