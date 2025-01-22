@@ -70,8 +70,11 @@ unsigned long debounceDelay = 50;
 // Uncomment the below line to view EMG envelope on serial plotter
 // #define Calibrate
 
-// int threshold1 = 70;
-// int threshold2 = 50;
+// Uncomment the line below to switch to advanced version of the code which provides better performance but may vary for different users
+// #define Advanced
+
+int threshold1 = 50;
+int threshold2 = 40;
 
 void setup() {
   // Serial connection begin
@@ -147,21 +150,37 @@ void loop() {
       Serial.print('\t');
       Serial.println(envelope2);
     
+    #endif
+
     // If not set to calibrate do serial communication
-    #else
+    #ifdef Advanced
 
       // LED ON when one hand move otherwise off, same for other hand
       // envelope should be higher than the threshold and also the envelope of other hand
       // output as "1" for CH1 and "2" for CH2
-      if(envelope1 > envelope2 and envelope1 > 50 and envelope2 < 20)
+      if(envelope1 > envelope2 and envelope1 > threshold1 and envelope2 < 20)
       { 
+        if(envelope2>10)
+        {
+          Serial.println("4");
+        }
+        else
+        {
         Serial.println("1");
+        }
       }
-      else if(envelope2 > envelope1 and envelope2 > 40)
+      else if(envelope2 > envelope1 and envelope2 > threshold2)
       { 
+        if(envelope1>20)
+        {
+          Serial.println("5");
+        }
+        else
+        {
         Serial.println("2");
+        }
       }
-      else if(envelope1 > 20 and envelope1 < 50 and envelope2 < 40 and envelope2 > 10)
+      else if(envelope1 > 20 and envelope1 < threshold1 and envelope2 < threshold2 and envelope2 > 10)
       { 
         Serial.println("3");
       }
@@ -169,6 +188,26 @@ void loop() {
       { 
         Serial.println("0");
       }
+
+    #else
+
+      if(envelope1 > envelope2 and envelope1 > threshold1 and envelope2 < 20)
+      { 
+        Serial.println("1");
+      }
+      else if(envelope2 > envelope1 and envelope2 > threshold2)
+      { 
+        Serial.println("2");
+      }
+      else if(envelope1 > 20 and envelope1 < threshold1 and envelope2 < threshold2 and envelope2 > 10)
+      { 
+        Serial.println("3");
+      }
+      else
+      { 
+        Serial.println("0");
+      }
+      
     
    #endif
   }

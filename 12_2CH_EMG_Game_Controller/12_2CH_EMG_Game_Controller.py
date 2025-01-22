@@ -57,7 +57,8 @@ while True:
                         keystroke_hold_time[most_common] = current_time
                         key_release_time[most_common] = current_time + 100  # Release after 100ms
 
-                # Handle keystroke 4 (press left and up together, release after 100ms)
+                # No need to edit these '4' and '5' keystrokes if you're using the basic version 
+                # This is for advanced version
                 elif most_common == "4":
                     if most_common not in keystroke_hold_time or current_time - keystroke_hold_time[most_common] >= 100:
                         keyboard.press('left')
@@ -87,6 +88,8 @@ while True:
                         elif key == "3":
                             keyboard.release('up')
                             print("up released")
+                        # No need to edit these '4' and '5' keystrokes if you're using the basic version 
+                        # This is for advanced version
                         elif key == "4":
                             keyboard.release('left')
                             keyboard.release('up')

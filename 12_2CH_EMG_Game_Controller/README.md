@@ -90,7 +90,7 @@ Before you begin, ensure you have the following:
    - Open the `12_2CH_EMG_Game_Controller.ino` file in Arduino IDE.
 
 3. **Configure Arduino IDE**:
-   - Select the correct **COM port** and **board**(which says the name of the device such as Arduino UNO R3) under the **Tools** menu.
+   - Select the correct **COM port** and **board**(which says the name of the device such as Arduino UNO R3) under the **Tools** menu. 
 
 4. **Upload the Code**:
    - Click the **Upload** button. A progress bar will indicate the upload status.
@@ -99,7 +99,14 @@ Before you begin, ensure you have the following:
    - Sit at least 5 meters away from AC appliances or electronic devices to avoid interference.
    - Unplug your laptop charger to reduce electrical noise.
 
+6. **Calibrate signal values**
+   - Uncomment #define Calibrate on line 71 to print signal values from each channel on the serial monitor.
+   - Use these values to test and update the threshold values for each channel on line 76.
 ---
+
+## Switching to Advanced version
+
+   **Uncomment #define Advanced on line 74 to switch to Advanced version and upload the code.**
 
 ## Testing & Playing
 
