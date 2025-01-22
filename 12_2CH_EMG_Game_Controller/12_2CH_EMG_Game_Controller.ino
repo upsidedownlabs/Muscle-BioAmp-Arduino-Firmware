@@ -73,8 +73,8 @@ unsigned long debounceDelay = 50;
 // Uncomment the line below to switch to advanced version of the code which provides better performance but may vary for different users
 // #define Advanced
 
-int threshold1 = 30;
-int threshold2 = 40;
+int threshold1 = 40;
+int threshold2 = 60;
 
 void setup() {
   // Serial connection begin
@@ -197,6 +197,10 @@ void loop() {
       else if(envelope2 > envelope1 and envelope2 > threshold2)
       { 
         Serial.println("2");
+      }
+       else if(envelope1 > 20 and envelope1 < threshold1 and envelope2 < threshold2 and envelope2 > 10)
+      { 
+        Serial.println("3");
       }
       else
       { 
