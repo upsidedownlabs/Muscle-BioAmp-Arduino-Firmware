@@ -54,49 +54,58 @@ void loop() {
 	// Sample
 	if(timer < 0){
 		timer += 1000000 / SAMPLE_RATE;
-    // Get analog input value (Raw EMG)
+        // Get analog input value (Raw EMG)
 		float sensor_value = analogRead(INPUT_PIN);
-    // Apply filter to raw EMG
-		float signal = EMGFilter(sensor_value);
-    // Print on serial with new line
-		Serial.println(signal);
+        // Apply the band-stop filter (48 Hz to 52 Hz)
+		float bandstop_filtered = BandStopFilter(sensor_value);
+
+		// Apply the high-pass filter (70 Hz)
+		float highpass_filtered = HighPassFilter(bandstop_filtered);
+
+		// Print the final filtered signal
+		Serial.print(highpass_filtered);
+
+    // Uncomment below 2 lines to compare with raw data
+    // Serial.print(" ");
+    // Serial.println(sensor_value);
 	}
 }
 
-// Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
-// Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
-// Filter is order 4, implemented as second-order sections (biquads).
-// Reference: 
-// https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-// https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
-float EMGFilter(float input)
+// High-Pass Butterworth IIR digital filter, generated using filter_gen.py.
+// Sampling rate: 500.0 Hz, frequency: 70.0 Hz.
+// Filter is order 2, implemented as second-order sections (biquads).
+// Reference: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
+float HighPassFilter(float input)
 {
   float output = input;
   {
     static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    float x = output - -0.82523238*z1 - 0.29463653*z2;
+    output = 0.52996723*x + -1.05993445*z1 + 0.52996723*z2;
+    z2 = z1;
+    z1 = x;
+  }
+  return output;
+}
+
+// Band-Stop Butterworth IIR digital filter, generated using filter_gen.py.
+// Sampling rate: 500.0 Hz, frequency: [48.0, 52.0] Hz.
+// Filter is order 2, implemented as second-order sections (biquads).
+// Reference: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
+float BandStopFilter(float input)
+{
+  float output = input;
+  {
+    static float z1, z2; // filter section state
+    float x = output - -1.56858163*z1 - 0.96424138*z2;
+    output = 0.96508099*x + -1.56202714*z1 + 0.96508099*z2;
     z2 = z1;
     z1 = x;
   }
   {
     static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    float x = output - -1.61100358*z1 - 0.96592171*z2;
+    output = 1.00000000*x + -1.61854514*z1 + 1.00000000*z2;
     z2 = z1;
     z1 = x;
   }
