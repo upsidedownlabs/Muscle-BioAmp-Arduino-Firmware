@@ -87,6 +87,7 @@ int total_blocks = sizeof(lcd_bar) / sizeof(lcd_bar[0]);
 void setup() {
   // Initialize serial communication
   Serial.begin(BAUD_RATE);
+  Wire.begin();
 
   // Initialize LCD
   lcd.begin(16,2);
