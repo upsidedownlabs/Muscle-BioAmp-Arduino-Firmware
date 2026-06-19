@@ -25,18 +25,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Samples per second
+// Sample Rate in Samples per second(hz)
 #define SAMPLE_RATE 500
 
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
+// Change this if the sensor is connected to a different analog pin
 #define INPUT_PIN A0
 
 void setup()
 {
-  // Serial connection begin
+  // Initialize serial communication
   Serial.begin(BAUD_RATE);
 }
 
