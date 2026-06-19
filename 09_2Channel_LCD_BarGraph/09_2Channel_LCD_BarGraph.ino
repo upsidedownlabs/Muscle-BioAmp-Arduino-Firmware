@@ -78,7 +78,7 @@ int data_index2, sum2;
 #define EMG_ENVELOPE_DIVIDER 4
 
 // LCD column indices for bar graph
-int lcd_bar[] = {4,5,6,7,8, 9, 10, 11, 12, 13,14,15};
+int lcd_bar[] = {4,5,6,7,8, 9,10,11,12,13,14,15};
 
 // Total number of blocks in LCD bar graph
 int total_blocks = sizeof(lcd_bar) / sizeof(lcd_bar[0]);
@@ -124,7 +124,7 @@ void loop() {
     int envelope2 = getEnvelope2(abs(signal2));
 
     // Update LCD bar graph for Channel 1
-    for(int i = 0; i<=total_blocks; i++){
+    for(int i = 0; i<total_blocks; i++){
       if(i>(envelope1/EMG_ENVELOPE_DIVIDER - EMG_ENVELOPE_BASELINE)){
           lcd.setCursor(lcd_bar[i],0);
           lcd.print(" ");
@@ -134,7 +134,7 @@ void loop() {
       }
     }
     // Update LCD bar graph for Channel 2
-    for(int j = 0; j<=total_blocks; j++){
+    for(int j = 0; j<total_blocks; j++){
       if(j>(envelope2/EMG_ENVELOPE_DIVIDER - EMG_ENVELOPE_BASELINE)){
            lcd.setCursor(lcd_bar[j],1);
           lcd.print((" "));
