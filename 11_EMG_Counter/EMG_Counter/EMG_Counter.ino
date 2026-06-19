@@ -32,16 +32,16 @@
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
+// Change if not using A2 analog pin
 #define INPUT_PIN A2
 
-// envelopeee buffer size
+// Envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
 
 // EMG Threshold value, different for each user
-// Check by plotting EMG envelopee data on Serial plotter
+// Check by plotting EMG envelope data on Serial plotter
 #define EMG_THRESHOLD 80
 
 // Button to start the counter
@@ -52,11 +52,11 @@
 
 bool buttonPressed = false;
 
-// Servo toggle flag
+// EMG gesture counter
 int count = 0;
 // Last gesture timestamp
 unsigned long lastGestureTime = 0;
-// Delay between two actions
+// Minimum time between two counted muscle contractions (ms)
 unsigned long gestureDelay = 500;
 int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
@@ -88,8 +88,10 @@ bool countedThisCycle = false;
 #define Calibrate
 
 void setup() {
-  // Your existing setup code
+  // Initialize serial communication, I/O pins, and timers
   Serial.begin(BAUD_RATE);
+  delay(100);
+  Serial.println("Serial Test");
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP); // Use INPUT_PULLUP to enable the internal pull-up resistor
    programStartTime = micros(); // Record the start time
