@@ -43,7 +43,7 @@
 // Change if not using A0 analog pin
 #define INPUT_PIN A0
 
-// envelopeee buffer size
+// Envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
@@ -52,7 +52,7 @@
 #define SERVO_PIN 2 // Pin2 for Muscle BioAmp Shield v0.3
 
 // EMG Threshold value, different for each user
-// Check by plotting EMG envelopee data on Serial plotter
+// Check by plotting EMG Envelope data on Serial plotter
 #define EMG_THRESHOLD 47
 
 // Servo open & close angles
@@ -84,10 +84,10 @@ int led_bar[] = {8, 9, 10, 11, 12, 13};
 int total_leds = sizeof(led_bar) / sizeof(led_bar[0]);
 
 void setup() {
-  // Serial connection begin
+  // Initialize serial communication
   Serial.begin(BAUD_RATE);
   // Initialize all the led_bar
-    for (int i = 0; i < total_leds; i++) {
+    for(int i = 0; i <total_leds; i++) {
       pinMode(led_bar[i], OUTPUT);
     }
    servo.attach(SERVO_PIN);
@@ -109,17 +109,17 @@ void loop() {
   if(timer < 0) {
     timer += 1000000 / SAMPLE_RATE;
    
-    // RAW EMG Values
+    // Raw EMG Values
     int sensor_value = analogRead(INPUT_PIN);
     
     // Filtered EMG
     int signal = EMGFilter(sensor_value);
     
-    // EMG envelopee
+    // EMG envelope
     int envelope = getEnvelope(abs(signal));
 
     // Update LED bar graph
-    for(int i = 0; i<=total_leds; i++){
+    for(int i = 0; i<total_leds; i++){
       if(i>(envelope/EMG_ENVELOPE_DIVIDER - EMG_ENVELOPE_BASELINE)){
           digitalWrite(led_bar[i], LOW);
       } else {
@@ -142,11 +142,11 @@ void loop() {
       }
     } 
     
-    // EMG Raw signal
+    // Filtered EMG signal
     Serial.print(signal);
-    // Data seprator
+    // Data separator
     Serial.print(",");
-    // EMG envelopeee
+    // EMG envelope
     Serial.println(envelope);
 
   }
