@@ -74,7 +74,7 @@ int threshold1 = 70;
 int threshold2 = 50;
 
 void setup() {
-  // Serial connection begin
+  // Initialize serial communication
   Serial.begin(BAUD_RATE);
   
   pinMode(INPUT_PIN1, INPUT);
