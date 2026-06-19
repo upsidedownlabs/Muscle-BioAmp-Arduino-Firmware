@@ -31,10 +31,10 @@
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
+// Change if 
 #define INPUT_PIN A0
 
-// envelope buffer size
+// Envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
@@ -43,7 +43,7 @@ int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
 
 void setup() {
-	// Serial connection begin
+	// Initialize serial communication
 	Serial.begin(BAUD_RATE);
 }
 
@@ -70,16 +70,16 @@ void loop() {
     // EMG envelope
 		int envelope = getEnvelope(abs(signal));
 
-    // EMG Raw signal
+    // Filtered EMG signal
 		Serial.print(signal);
-    // Data seprator
+    // Data separator
 		Serial.print(",");
     // EMG Envelope
 		Serial.println(envelope);
 	}
 }
 
-// envelope detection algorithm
+// Envelope detection algorithm
 int getEnvelope(int abs_emg){
 	sum -= circular_buffer[data_index];
 	sum += abs_emg;
