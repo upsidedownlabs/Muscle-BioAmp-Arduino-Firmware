@@ -62,19 +62,19 @@ int data_index, sum;
 
 // Buzzer timer variables
 unsigned long buzzerTimer = 0;
-const unsigned long BUZZER_INTERVAL = 1000000; // 1 second in microseconds
+const unsigned long BUZZER_INTERVAL = 1000000;  // 1 second in microseconds
 bool buzzerState = false;
 
 // Buzzer tone frequency (in Hz)
-const int BUZZER_FREQUENCY = 2000; // Adjust this value to change the tone
-const int BUZZER_DURATION = 100; // Duration of the beep in milliseconds
+const int BUZZER_FREQUENCY = 2000;  // Adjust this value to change the tone
+const int BUZZER_DURATION = 100;    // Duration of the beep in milliseconds
 
 // Timer for program termination
 unsigned long programStartTime;
-const unsigned long PROGRAM_DURATION = 60000000; // 1 minute in microseconds
+const unsigned long PROGRAM_DURATION = 60000000;  // 1 minute in microseconds
 
 // LED pins
-const int LED_PINS[] = {8, 9, 10, 11, 12, 13};
+const int LED_PINS[] = { 8, 9, 10, 11, 12, 13 };
 const int NUM_LEDS = 6;
 
 bool countedThisCycle = false;
@@ -87,20 +87,20 @@ void setup() {
   // Your existing setup code
   Serial.begin(BAUD_RATE);
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP); // Use INPUT_PULLUP to enable the internal pull-up resistor
-   programStartTime = micros(); // Record the start time
-    for (int i = 0; i < NUM_LEDS; i++){
-        pinMode(LED_PINS[i], OUTPUT);
-        }
-    }
+  pinMode(BUTTON_PIN, INPUT_PULLUP);  // Use INPUT_PULLUP to enable the internal pull-up resistor
+  programStartTime = micros();        // Record the start time
+  for (int i = 0; i < NUM_LEDS; i++) {
+    pinMode(LED_PINS[i], OUTPUT);
+  }
+}
 
-  
+
 void loop() {
   // Debouncing logic for the button
   static unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-  static int lastButtonState = HIGH;           // the previous reading from the input pin
-  int buttonState;                             // the current reading from the input pin
-  const unsigned long debounceDelay = 50;      // the debounce time; increase if the output flickers
+  static int lastButtonState = HIGH;          // the previous reading from the input pin
+  int buttonState;                            // the current reading from the input pin
+  const unsigned long debounceDelay = 50;     // the debounce time; increase if the output flickers
 
   // Read the state of the button
   buttonState = digitalRead(BUTTON_PIN);
@@ -112,7 +112,7 @@ void loop() {
 
   // If the button state has not changed for the debounce delay, consider it stable
   if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (buttonState == LOW) { // Button is pressed (assuming active low with pull-up)
+    if (buttonState == LOW) {  // Button is pressed (assuming active low with pull-up)
       buttonPressed = true;
     }
   }
@@ -122,7 +122,7 @@ void loop() {
   // Only run the main program logic if the button has been pressed
   if (buttonPressed) {
     unsigned long currentTime = micros();
-    #ifndef Calibrate
+#ifndef Calibrate
     // Check if 1 minute has elapsed
     if (currentTime - programStartTime >= PROGRAM_DURATION) {
       // Program duration reached, print final count and halt
@@ -131,9 +131,9 @@ void loop() {
       Serial.println(count);
       Serial.print("Program duration (microseconds): ");
       Serial.println(PROGRAM_DURATION);
-      while(1) {} // Infinite loop to halt the program
+      while (1) {}  // Infinite loop to halt the program
     }
-    #endif
+#endif
 
     // Calculate elapsed time
     static unsigned long past = 0;
@@ -145,13 +145,13 @@ void loop() {
     static long timer = 0;
     timer -= interval;
 
-    #ifndef Calibrate
+#ifndef Calibrate
     // Buzzer timer
     buzzerTimer += interval;
-    #endif
+#endif
 
     // Sample and get envelope
-    if(timer < 0) {
+    if (timer < 0) {
       timer += 1000000 / SAMPLE_RATE;
 
       // RAW EMG Values
@@ -162,22 +162,22 @@ void loop() {
 
       // EMG envelope
       int envelope = getEnvelope(abs(signal));
-      // If set to calibrate show envelope data on serial monitor/plotter
-      #ifdef Calibrate
+// If set to calibrate show envelope data on serial monitor/plotter
+#ifdef Calibrate
       Serial.println(envelope);
-      // If not set to calibrate do serial communication
-      #else
-      if(envelope > EMG_THRESHOLD && !countedThisCycle) {
-        if((millis() - lastGestureTime) > gestureDelay){
+// If not set to calibrate do serial communication
+#else
+      if (envelope > EMG_THRESHOLD && !countedThisCycle) {
+        if ((millis() - lastGestureTime) > gestureDelay) {
           count = count + 1;
           lastGestureTime = millis();
           countedThisCycle = true;
         }
       }
       Serial.println(count);
-      #endif
+#endif
     }
-    #ifndef Calibrate
+#ifndef Calibrate
     // Check if it's time to toggle the buzzer
     if (buzzerTimer >= BUZZER_INTERVAL) {
       buzzerTimer -= BUZZER_INTERVAL;
@@ -187,7 +187,7 @@ void loop() {
         countedThisCycle = false;  // Reset the flag when the buzzer goes high
       }
     }
-    #endif
+#endif
   }
 }
 
@@ -207,48 +207,47 @@ void displayLEDs(int count, unsigned long duration) {
 }
 
 // envelope detection algorithm
-int getEnvelope(int abs_emg){
+int getEnvelope(int abs_emg) {
   sum -= circular_buffer[data_index];
   sum += abs_emg;
   circular_buffer[data_index] = abs_emg;
   data_index = (data_index + 1) % BUFFER_SIZE;
-  return (sum/BUFFER_SIZE) * 2;
+  return (sum / BUFFER_SIZE) * 2;
 }
 
 // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
 // Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
 // Filter is order 4, implemented as second-order sections (biquads).
-// Reference: 
+// Reference:
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
-float EMGFilter(float input)
-{
+float EMGFilter(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
+    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
+    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }

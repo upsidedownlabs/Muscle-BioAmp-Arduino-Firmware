@@ -76,10 +76,10 @@ int threshold2 = 50;
 void setup() {
   // Initialize serial communication
   Serial.begin(BAUD_RATE);
-  
+
   pinMode(INPUT_PIN1, INPUT);
   pinMode(CH1_STATUS_LED, OUTPUT);
-  
+
   pinMode(INPUT_PIN2, INPUT);
   pinMode(CH2_STATUS_LED, OUTPUT);
 
@@ -110,7 +110,7 @@ void loop() {
       }
     }
   }
- 
+
   // Calculate elapsed time
   static unsigned long past = 0;
   unsigned long present = micros();
@@ -122,114 +122,115 @@ void loop() {
   timer -= interval;
 
   // Sample and get envelope
-  if(timer < 0) {
+  if (timer < 0) {
     timer += 1000000 / SAMPLE_RATE;
     // RAW EMG
     int sensor_value1 = analogRead(INPUT_PIN1);
-   
+
     // Filtered EMG
     int signal1 = EMGFilter1(sensor_value1);
-   
+
     // EMG envelope
     int envelope1 = getEnvelope1(abs(signal1));
     int sensor_value2 = analogRead(INPUT_PIN2);
-   
+
     // Filtered EMG
     int signal2 = EMGFilter2(sensor_value2);
-   
+
     // EMG envelope
     int envelope2 = getEnvelope2(abs(signal2));
 
-    // If set to calibrate show envelope data on serial monitor/plotter
-    #ifdef Calibrate
-    
-      Serial.print(envelope1);
-      Serial.print('\t');
-      Serial.println(envelope2);
-    
-    // If not set to calibrate do serial communication
-    #else
+// If set to calibrate show envelope data on serial monitor/plotter
+#ifdef Calibrate
 
-      // LED ON when one hand move otherwise off, same for other hand
-      // envelope should be higher than the threshold and also the envelope of other hand
-      // output as "1" for CH1 and "2" for CH2
-      if(envelope1 and ledState){
-      if(envelope1 > envelope2 and envelope1 > threshold1){ 
+    Serial.print(envelope1);
+    Serial.print('\t');
+    Serial.println(envelope2);
+
+// If not set to calibrate do serial communication
+#else
+
+    // LED ON when one hand move otherwise off, same for other hand
+    // envelope should be higher than the threshold and also the envelope of other hand
+    // output as "1" for CH1 and "2" for CH2
+    if (envelope1 and ledState) {
+      if (envelope1 > envelope2 and envelope1 > threshold1) {
         Serial.println("1");
-       digitalWrite(CH1_STATUS_LED,HIGH);
-       }
-       else
-       {digitalWrite(CH1_STATUS_LED,LOW);}
-       }
-      if(envelope2 and ledState){
-      if(envelope2 > envelope1 and envelope2 > threshold2){ Serial.println("2");
-       digitalWrite(CH2_STATUS_LED,HIGH);
-       }
-       else {digitalWrite(CH2_STATUS_LED,LOW);}
-       }
-      if(envelope2 > threshold1 and envelope2 > threshold2) Serial.println("0");
-      else Serial.println("0");
-    
-   #endif
+        digitalWrite(CH1_STATUS_LED, HIGH);
+      } else {
+        digitalWrite(CH1_STATUS_LED, LOW);
+      }
+    }
+    if (envelope2 and ledState) {
+      if (envelope2 > envelope1 and envelope2 > threshold2) {
+        Serial.println("2");
+        digitalWrite(CH2_STATUS_LED, HIGH);
+      } else {
+        digitalWrite(CH2_STATUS_LED, LOW);
+      }
+    }
+    if (envelope2 > threshold1 and envelope2 > threshold2) Serial.println("0");
+    else Serial.println("0");
+
+#endif
   }
   digitalWrite(ledPin, ledState);
- lastButtonState = reading;
+  lastButtonState = reading;
 }
 
 // Envelope detection algorithm
 // Get CH1 envelope
-int getEnvelope1(int abs_emg){
+int getEnvelope1(int abs_emg) {
   sum1 -= circular_buffer1[data_index1];
   sum1 += abs_emg;
   circular_buffer1[data_index1] = abs_emg;
   data_index1 = (data_index1 + 1) % BUFFER_SIZE;
-  return (sum1/BUFFER_SIZE) * 2;
+  return (sum1 / BUFFER_SIZE) * 2;
 }
 // Get CH2 envelope
-int getEnvelope2(int abs_emg){
+int getEnvelope2(int abs_emg) {
   sum2 -= circular_buffer2[data_index2];
   sum2 += abs_emg;
   circular_buffer2[data_index2] = abs_emg;
   data_index2 = (data_index2 + 1) % BUFFER_SIZE;
-  return (sum2/BUFFER_SIZE) * 2;
+  return (sum2 / BUFFER_SIZE) * 2;
 }
 
 // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
 // Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
 // Filter is order 4, implemented as second-order sections (biquads).
-// Reference: 
+// Reference:
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
 
 // CH1 EMG filter
-float EMGFilter1(float input)
-{
+float EMGFilter1(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
+    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
+    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
@@ -237,34 +238,33 @@ float EMGFilter1(float input)
 }
 
 // CH2 EMG filter
-float EMGFilter2(float input2)
-{
+float EMGFilter2(float input2) {
   float output = input2;
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
+    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
+    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }

@@ -53,7 +53,7 @@ void loop() {
 	timer -= interval;
 
 	// Sample
-	if(timer < 0){
+	if (timer < 0) {
 		timer += 1000000 / SAMPLE_RATE;
 		int sensor_value = analogRead(INPUT_PIN);
 		Serial.println(sensor_value);

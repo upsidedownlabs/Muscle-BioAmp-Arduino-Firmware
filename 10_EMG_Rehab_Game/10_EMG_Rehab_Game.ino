@@ -58,7 +58,7 @@ int data_index, sum;
 
 // Buzzer timer variables
 unsigned long buzzerTimer = 0;
-unsigned long BUZZER_INTERVAL = 2000000; // 1 second in microseconds
+unsigned long BUZZER_INTERVAL = 2000000;  // 1 second in microseconds
 bool buzzerState = false;
 
 // Level tracking variables
@@ -66,18 +66,18 @@ int level = 0;
 const uint8_t MAX_COUNT = 31;
 const uint8_t COUNTS_PER_LEVEL = 32;
 const uint8_t MAX_LEVEL = 6;
-const uint32_t BUZZER_INTERVALS[] = {1500000, 1300000, 1100000, 900000, 700000, 500000};
+const uint32_t BUZZER_INTERVALS[] = { 1500000, 1300000, 1100000, 900000, 700000, 500000 };
 
 // Buzzer tone settings
 const int BUZZER_FREQUENCY = 2000;
 const int BUZZER_DURATION = 100;
 
 // LED pins for count display
-const int LED_PINS_Count[] = {9, 10, 11, 12, 13};
+const int LED_PINS_Count[] = { 9, 10, 11, 12, 13 };
 const int NUM_LEDS_Count = 5;
 
 // LED pins for level display
-const int LED_PINS_Level[] = {8, 9, 10, 11, 12, 13};
+const int LED_PINS_Level[] = { 8, 9, 10, 11, 12, 13 };
 const int NUM_LEDS_Level = 6;
 
 // Game state variables
@@ -90,7 +90,7 @@ unsigned long lastBuzzerTime = 0;
 #define DEBOUNCE_DELAY 50
 
 // Game control variables
-bool gameRunning = true; // Game starts automatically
+bool gameRunning = true;  // Game starts automatically
 bool buttonPressed = false;
 unsigned long lastButtonPress = 0;
 int buttonState;
@@ -113,12 +113,12 @@ bool gameWon = false;
 void setup() {
   // Initialize serial communication
   Serial.begin(BAUD_RATE);
-  
+
   // Set pin modes
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(LEVEL_BUTTON_PIN, INPUT_PULLUP);
-  
+
   // Initialize LED pins
   for (int i = 0; i < NUM_LEDS_Count; i++) {
     pinMode(LED_PINS_Count[i], OUTPUT);
@@ -126,7 +126,7 @@ void setup() {
   for (int i = 0; i < NUM_LEDS_Level; i++) {
     pinMode(LED_PINS_Level[i], OUTPUT);
   }
-  
+
   // Initialize LED display
   displayBinaryCount(0);
 }
@@ -221,29 +221,29 @@ void loop() {
 
     static long timer = 0;
     timer -= interval;
-    
+
     // Buzzer timer
     buzzerTimer += interval;
 
     // EMG sampling and processing
-    if(timer < 0) {
+    if (timer < 0) {
       timer += 1000000 / SAMPLE_RATE;
-      
+
       int sensor_value = analogRead(INPUT_PIN);
       int signal = EMGFilter(sensor_value);
       int envelope = getEnvelope(abs(signal));
-      
-      if(envelope > EMG_THRESHOLD) {
-        if((millis() - lastGestureTime) > gestureDelay && !countIncrementedSinceBuzzer){
+
+      if (envelope > EMG_THRESHOLD) {
+        if ((millis() - lastGestureTime) > gestureDelay && !countIncrementedSinceBuzzer) {
           // Increment count and update level
           count++;
           level = min(6, count / COUNTS_PER_LEVEL);
           lastGestureTime = millis();
           displayBinaryCount(count);
           countIncrementedSinceBuzzer = true;
-          
+
           adjustBuzzerInterval();
-          
+
           Serial.print("Count: ");
           Serial.print(count);
           Serial.print(" Level: ");
@@ -261,8 +261,7 @@ void loop() {
         }
       }
     }
-  }
-  else if (displayingLevel) {
+  } else if (displayingLevel) {
     displayLevelLEDs();
   }
 
@@ -281,17 +280,17 @@ void loop() {
 // Adjust buzzer interval based on current level
 void adjustBuzzerInterval() {
   int index = min(level, MAX_LEVEL);
-  if (index >= 0 && index < sizeof(BUZZER_INTERVALS)/sizeof(BUZZER_INTERVALS[0])) {
+  if (index >= 0 && index < sizeof(BUZZER_INTERVALS) / sizeof(BUZZER_INTERVALS[0])) {
     BUZZER_INTERVAL = BUZZER_INTERVALS[index];
   } else {
-    BUZZER_INTERVAL = BUZZER_INTERVALS[sizeof(BUZZER_INTERVALS)/sizeof(BUZZER_INTERVALS[0]) - 1];
+    BUZZER_INTERVAL = BUZZER_INTERVALS[sizeof(BUZZER_INTERVALS) / sizeof(BUZZER_INTERVALS[0]) - 1];
   }
 }
 
 // Display binary count on LEDs
 void displayBinaryCount(int count) {
   count = count % 32;
-  
+
   for (int i = 0; i < NUM_LEDS_Count; i++) {
     if (count & (1 << i)) {
       digitalWrite(LED_PINS_Count[i], HIGH);
@@ -320,25 +319,25 @@ void displayWinState() {
 void winAnimation() {
   const int ANIMATION_SPEED = 100;
   const int REPEAT_COUNT = 3;
-  
+
   for (int repeat = 0; repeat < REPEAT_COUNT; repeat++) {
     // Light up LEDs from 8 to 13
     for (int i = 0; i < NUM_LEDS_Level; i++) {
       digitalWrite(LED_PINS_Level[i], HIGH);
       delay(ANIMATION_SPEED);
     }
-    
+
     delay(ANIMATION_SPEED * 2);
-    
+
     // Turn off LEDs from 13 to 8
     for (int i = NUM_LEDS_Level - 1; i >= 0; i--) {
       digitalWrite(LED_PINS_Level[i], LOW);
       delay(ANIMATION_SPEED);
     }
-    
+
     delay(ANIMATION_SPEED * 2);
   }
-  
+
   // Final state: all LEDs on
   for (int i = 0; i < NUM_LEDS_Level; i++) {
     digitalWrite(LED_PINS_Level[i], HIGH);
@@ -346,48 +345,47 @@ void winAnimation() {
 }
 
 // envelope detection algorithm
-int getEnvelope(int abs_emg){
+int getEnvelope(int abs_emg) {
   sum -= circular_buffer[data_index];
   sum += abs_emg;
   circular_buffer[data_index] = abs_emg;
   data_index = (data_index + 1) % BUFFER_SIZE;
-  return (sum/BUFFER_SIZE) * 2;
+  return (sum / BUFFER_SIZE) * 2;
 }
 
 // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
 // Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
 // Filter is order 4, implemented as second-order sections (biquads).
-// Reference: 
+// Reference:
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
-float EMGFilter(float input)
-{
+float EMGFilter(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
+    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
+    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
