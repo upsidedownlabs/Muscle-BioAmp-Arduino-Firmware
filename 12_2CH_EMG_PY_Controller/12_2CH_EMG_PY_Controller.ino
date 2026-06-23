@@ -1,4 +1,4 @@
-// EMGGAMECONTROLLER - BioAmp EXG Pill
+// EMG PYTHON CONTROLLER - BioAmp EXG Pill
 // https://github.com/upsidedownlabs/BioAmp-EXG-Pill
 // https://github.com/upsidedownlabs/Muscle-BioAmp-Arduino-Firmware
 
@@ -26,6 +26,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
+// At Upside Down Labs, we create open-source DIY neuroscience hardware and software.
+// Our mission is to make neuroscience affordable and accessible for everyone.
+// By supporting us with your purchase, you help spread innovation and open science.
+// Thank you for being part of this journey with us!
+
 
 // Samples per second
 #define SAMPLE_RATE 500
