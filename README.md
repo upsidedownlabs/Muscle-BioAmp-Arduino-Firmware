@@ -217,7 +217,7 @@ It's not recommended but to resolve this issue you can use external 5V supply fo
     <img src="02_EMG_Filter/EMGFilter.png" height="300" width="400">
     
 
-2. **EMG Envelop**
+2. **EMG Envelope**
 
     EMG signal envelop detection for robotics and biomedical applications.
 
