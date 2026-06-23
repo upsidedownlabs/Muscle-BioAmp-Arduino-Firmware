@@ -190,26 +190,22 @@ void loop() {
 
       #else
 
-        // BOTH FLEX = NITRO
-          if(envelope1 > threshold1 && envelope2 > threshold2)
-          {
-            Serial.println("3");
-          }
-          // CH1 FLEX (RIGHT)
-          else if(envelope1 > threshold1)
-          {
-            Serial.println("1");
-          }
-          // CH2 FLEX (LEFT)
-          else if(envelope2 > threshold2)
-          {
-            Serial.println("2");
-          }
-          // NO FLEX
-          else
-          {
-            Serial.println("0");
-          }
+        if(envelope1 > envelope2 and envelope1 > threshold1 and envelope2 < 20)
+        { 
+          Serial.println("1");
+        }
+        else if(envelope2 > envelope1 and envelope2 > threshold2)
+        { 
+          Serial.println("2");
+        }
+        else if(envelope1 > 20 and envelope1 < threshold1 and envelope2 < threshold2 and envelope2 > 10)
+        { 
+          Serial.println("3");
+        }
+        else
+        { 
+          Serial.println("0");
+        }
       #endif
     
    #endif
