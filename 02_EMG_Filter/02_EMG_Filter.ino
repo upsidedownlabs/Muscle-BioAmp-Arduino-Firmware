@@ -25,23 +25,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Samples per second
+// At Upside Down Labs, we create open-source DIY neuroscience hardware and software.
+// Our mission is to make neuroscience affordable and accessible for everyone.
+// By supporting us with your purchase, you help spread innovation and open science.
+// Thank you for being part of this journey with us!
+
+
+// Sample Rate in  Hz (Samples per second)
 #define SAMPLE_RATE 500
 
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
+// Change this if the sensor is connected to a different analog pin
 #define INPUT_PIN A0
 
-void setup()
-{
-  // Serial connection begin
+void setup() {
+  // Initialize serial communication
   Serial.begin(BAUD_RATE);
 }
 
-void loop()
-{
+void loop() {
   // Calculate elapsed time
   static unsigned long past = 0;
   unsigned long present = micros();
@@ -53,8 +57,7 @@ void loop()
   timer -= interval;
 
   // Sample
-  if (timer < 0)
-  {
+  if (timer < 0) {
     timer += 1000000 / SAMPLE_RATE;
 
     // Get analog input value (Raw EMG)
@@ -75,11 +78,10 @@ void loop()
 // Sampling rate: 500.0 Hz, frequency: 70.0 Hz.
 // Filter is order 2, implemented as second-order sections (biquads).
 // Reference: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-float HighPassFilter(float input)
-{
+float HighPassFilter(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
+    static float z1, z2;  // filter section state
     float x = output - -0.82523238 * z1 - 0.29463653 * z2;
     output = 0.52996723 * x + -1.05993445 * z1 + 0.52996723 * z2;
     z2 = z1;
@@ -92,18 +94,17 @@ float HighPassFilter(float input)
 // Sampling rate: 500.0 Hz, frequency: [48.0, 52.0] Hz.
 // Filter is order 2, implemented as second-order sections (biquads).
 // Reference: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-float BandStopFilter(float input)
-{
+float BandStopFilter(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
+    static float z1, z2;  // filter section state
     float x = output - -1.56858163 * z1 - 0.96424138 * z2;
     output = 0.96508099 * x + -1.56202714 * z1 + 0.96508099 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
+    static float z1, z2;  // filter section state
     float x = output - -1.61100358 * z1 - 0.96592171 * z2;
     output = 1.00000000 * x + -1.61854514 * z1 + 1.00000000 * z2;
     z2 = z1;

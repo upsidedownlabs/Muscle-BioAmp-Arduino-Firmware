@@ -25,12 +25,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if defined(ESP32) 
-  // ESP32 Servo library
-  #include <ESP32Servo.h>
+// At Upside Down Labs, we create open-source DIY neuroscience hardware and software.
+// Our mission is to make neuroscience affordable and accessible for everyone.
+// By supporting us with your purchase, you help spread innovation and open science.
+// Thank you for being part of this journey with us!
+
+
+#if defined(ESP32)
+// ESP32 Servo library
+#include <ESP32Servo.h>
 #else
-  // Arduino Servo library
-  #include <Servo.h>
+// Arduino Servo library
+#include <Servo.h>
 #endif
 
 // Samples per second
@@ -42,16 +48,16 @@
 // Change if not using A0 analog pin
 #define INPUT_PIN A0
 
-// envelopee buffer size
+// Envelope buffer size
 // High value -> smooth but less responsive
 // Low value -> not smooth but responsive
 #define BUFFER_SIZE 64
 
 // Servo pin (Change as per your connection)
-#define SERVO_PIN 2 // Pin2 for Muscle BioAmp Shield v0.3
+#define SERVO_PIN 2  // Pin2 for Muscle BioAmp Shield v0.3
 
 // EMG Threshold value, different for each user
-// Check by plotting EMG envelopee data on Serial plotter
+// Check by plotting EMG envelope data on Serial plotter
 #define EMG_THRESHOLD 47
 
 // Servo open & close angles
@@ -60,17 +66,17 @@
 
 int circular_buffer[BUFFER_SIZE];
 int data_index, sum;
-int flag=0;
+int flag = 0;
 Servo servo;
 
 void setup() {
-  // Serial connection begin
+  // Initialize serial communication
   Serial.begin(BAUD_RATE);
   // Attach servo
   servo.attach(SERVO_PIN);
 }
 
-void loop() {  
+void loop() {
   // Calculate elapsed time
   static unsigned long past = 0;
   unsigned long present = micros();
@@ -82,74 +88,73 @@ void loop() {
   timer -= interval;
 
   // Sample and get envelope
-  if(timer < 0) {
+  if (timer < 0) {
     timer += 1000000 / SAMPLE_RATE;
-    
-    // RAW EMG Values
+
+    // Raw EMG Values
     int sensor_value = analogRead(INPUT_PIN);
-    
+
     // Filtered EMG
     int signal = EMGFilter(sensor_value);
-    
-    // EMG envelopee
+
+    // EMG envelope
     int envelope = getEnvelope(abs(signal));
-    
+
     // Move servo
-    if(envelope > EMG_THRESHOLD) servo.write(SERVO_CLOSE);
+    if (envelope > EMG_THRESHOLD) servo.write(SERVO_CLOSE);
     else servo.write(SERVO_OPEN);
 
-    // EMG Raw signal
+    // Filtered EMG signal
     Serial.print(signal);
-    // Data seprator
+    // Data separator
     Serial.print(",");
-    // EMG envelopee
+    // EMG envelope
     Serial.println(envelope);
   }
 }
 
 // envelope detection algorithm
-int getEnvelope(int abs_emg){
+int getEnvelope(int abs_emg) {
   sum -= circular_buffer[data_index];
   sum += abs_emg;
   circular_buffer[data_index] = abs_emg;
   data_index = (data_index + 1) % BUFFER_SIZE;
-  return (sum/BUFFER_SIZE) * 2;
+  return (sum / BUFFER_SIZE) * 2;
 }
 
 // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
 // Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
 // Filter is order 4, implemented as second-order sections (biquads).
-// Reference: 
+// Reference:
 // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
 // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
-float EMGFilter(float input)
-{
+float EMGFilter(float input) {
   float output = input;
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.05159732*z1 - 0.36347401*z2;
-    output = 0.01856301*x + 0.03712602*z1 + 0.01856301*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
+    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -0.53945795*z1 - 0.39764934*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - 0.47319594*z1 - 0.70744137*z2;
-    output = 1.00000000*x + 2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
+    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }
   {
-    static float z1, z2; // filter section state
-    float x = output - -1.00211112*z1 - 0.74520226*z2;
-    output = 1.00000000*x + -2.00000000*z1 + 1.00000000*z2;
+    static float z1, z2;  // filter section state
+    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
+    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
     z2 = z1;
     z1 = x;
   }

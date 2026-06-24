@@ -25,6 +25,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// At Upside Down Labs, we create open-source DIY neuroscience hardware and software.
+// Our mission is to make neuroscience affordable and accessible for everyone.
+// By supporting us with your purchase, you help spread innovation and open science.
+// Thank you for being part of this journey with us!
 
 // Samples per second
 #define SAMPLE_RATE 500
@@ -32,12 +36,12 @@
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-// Change if not using A0 analog pin
+// Change this if your sensor is connected to a different analog pin
 #define INPUT_PIN A0
 
 
 void setup() {
-	// Serial connection begin
+	// Initialize serial communication
 	Serial.begin(BAUD_RATE);
 }
 
@@ -53,7 +57,7 @@ void loop() {
 	timer -= interval;
 
 	// Sample
-	if(timer < 0){
+	if (timer < 0) {
 		timer += 1000000 / SAMPLE_RATE;
 		int sensor_value = analogRead(INPUT_PIN);
 		Serial.println(sensor_value);

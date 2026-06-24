@@ -214,11 +214,11 @@ It's not recommended but to resolve this issue you can use external 5V supply fo
 
     A band pass filter for EMG signals between 74.5 Hz and 149.5 Hz
 
-    <img src="2_EMGFilter/EMGFilter.png" height="300" width="400">
+    <img src="02_EMG_Filter/EMGFilter.png" height="300" width="400">
     
 
-2. **EMG Envelop**
+2. **EMG Envelope**
 
     EMG signal envelop detection for robotics and biomedical applications.
 
-    <img src="3_EMGEnvelope/EMGEnvelope.png" height="300" width="400">
+    <img src="03_EMG_Envelope/EMGEnvelope.png" height="300" width="400">
