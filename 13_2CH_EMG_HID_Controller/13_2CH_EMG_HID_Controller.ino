@@ -191,9 +191,10 @@ void loop() {
       }
     }
     prevBothFlex = bothFlex;
+    bool steeringCooldown = (now - lastComboTime) < DOUBLE_FLEX_DEBOUNCE_MS;
 
     // STEERING - only a single key (a or d) pressed at a time
-    if (flex1 && !flex2) {
+    if (!steeringCooldown && flex1 && !flex2) {
       // RIGHT
       if (!rightHeld) {
         Keyboard.press(RIGHT_ARM_KEY);  //change as per your game control
@@ -203,7 +204,7 @@ void loop() {
         Keyboard.release(LEFT_ARM_KEY);
         leftHeld = false;
       }
-    } else if (flex2 && !flex1) {
+    } else if (!steeringCooldown && flex2 && !flex1) {
       // LEFT
       if (!leftHeld) {
         Keyboard.press(LEFT_ARM_KEY);  //change as per your game control

@@ -51,8 +51,8 @@ A **debounce window (300 ms)** prevents a single prolonged double-flex from bein
 This project uses the **DIY Neuroscience Kit Pro** by Upside Down Labs:
 
 - BioAmp EXG Pill (Assembled)
-- Arduino Uno (or Arduino UNO R4 Minima)
-- Muscle BioAmp Shield (v0.3 or similar)
+- Arduino Uno R4 Minima
+- Muscle BioAmp Shield
 - BioAmp Cable (100cm) x 2
 - STEMMA Cable (JST PH 2.0mm to 3 female jumpers)
 - Gel Electrodes (6 total: 3 per channel - positive, negative, reference)
