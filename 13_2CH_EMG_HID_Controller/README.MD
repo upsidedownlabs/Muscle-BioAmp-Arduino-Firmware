@@ -145,7 +145,7 @@ Muscle strength varies between people, so threshold values need tuning.
    #define Calibrate
    ```
 3. Upload the modified code.
-4. Open the **Serial Monitor** (or Serial Plotter) in the Arduino IDE.
+4. Open the **Serial Monitor** in the Arduino IDE.
 5. Flex your **left forearm** several times at full strength - note the **maximum peak value** shown.
 6. Flex your **right forearm** several times - note its **maximum peak value**.
 7. Calculate new thresholds as **60–70% of each peak value**.
