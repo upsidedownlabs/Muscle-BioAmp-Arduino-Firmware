@@ -66,7 +66,7 @@ This project uses the **DIY Neuroscience Kit Pro** by Upside Down Labs:
 
 - [Arduino IDE](https://www.arduino.cc/en/software)
 - `Keyboard` library (built into Arduino IDE for boards with native USB HID support)
-- Arduino UNO R4 board package (if using UNO R4 Minima):
+- Arduino UNO R4 board package :
   `Tools → Board → Boards Manager → Search "Arduino UNO R4 Boards" → Install`
 
 ---
@@ -109,7 +109,7 @@ This is a **2-channel system**:
 
 1. Copy the code from this repository.
 2. Open the **Arduino IDE**.
-3. Install the **Arduino UNO R4 board package** (if applicable):
+3. Install the **Arduino UNO R4 board package** :
    `Tools → Board → Boards Manager → Search "Arduino UNO R4 Boards" → Install latest`
    - Accept any installation/permission prompts.
 4. Create a new sketch: `File → New Sketch`.
@@ -173,7 +173,7 @@ Muscle strength varies between people, so threshold values need tuning.
 | Double flex (3rd, 5th, ...) | `W` (held) | Back to Forward Mode |
 | Double flex (4th, 6th, ...) | `S` (held) | Back to Reverse Mode |
 
-Driving mode keeps toggling between Forward and Reverse with every subsequent double flex.
+**Driving mode keeps toggling between Forward and Reverse on each subsequent double flex.**
 
 ---
 
@@ -193,9 +193,9 @@ const char RIGHT_ARM_KEY   = 'd'; // Steer Right
 
 | Issue | Possible Fix |
 |---|---|
-| Keys not registering at all | Check board/port selection; confirm `Keyboard.begin()` ran (re-upload); ensure board supports native USB HID (e.g., Leonardo, Micro, UNO R4) |
-| Noisy / inconsistent flex detection | Re-do skin prep; check electrode placement and contact; sit away from AC appliances/chargers |
-| Thresholds always triggering or never triggering | Re-run calibration (Step: Calibration) and adjust `threshold1`/`threshold2` |
+| Keys not registering at all | Check board/port selection; confirm `Keyboard.begin()` ran (re-upload); ensure board supports native USB HID |
+| Noisy / inconsistent flex detection | Re-do skin prep; check electrode placement and contact; sit away from AC appliances/chargers.You can check out the [Document](https://docs.upsidedownlabs.tech/guides/troubleshoot/tips/index.html) for more tips. |
+| Thresholds always triggering or never triggering | Re-run calibration (Step: Calibration) and adjust `envelope1Threshold`/`envelope2Threshold` |
 | Mode toggles multiple times per flex | Increase `DOUBLE_FLEX_DEBOUNCE_MS` |
 | Steering feels laggy | Decrease `BUFFER_SIZE` for faster response (trade-off: less smoothing) |
 | Steering feels jittery/noisy | Increase `BUFFER_SIZE` for more smoothing (trade-off: less responsive) |

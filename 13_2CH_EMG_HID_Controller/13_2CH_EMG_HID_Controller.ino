@@ -42,7 +42,7 @@
 // Make sure to set the same baud rate on your Serial Monitor/Plotter
 #define BAUD_RATE 115200
 
-
+// Input pins
 #define INPUT_PIN1 A0
 #define INPUT_PIN2 A2
 
@@ -56,16 +56,17 @@
 
 // Key mappings
 // Change these keys according  to your game
+// Modes keeps toggling between Forward and Reverse modes on each subsequent double flex.
 const char MODE_1_KEY = 'w';     // Key pressed for Forward mode
 const char MODE_2_KEY = 's';     // Key pressed for Reverse mode
 const char LEFT_ARM_KEY = 'a';   // Key pressed for left steering
 const char RIGHT_ARM_KEY = 'd';  // Key pressed for right steering
 
 // Tracks whether each keyboard key is currently held down
-bool rightHeld = false;
-bool leftHeld = false;
-bool wHeld = false;
-bool sHeld = false;
+bool rightHeld = false; // True while RIGHT_ARM_KEY is pressed
+bool leftHeld = false;  // True while LEFT_ARM_KEY is pressed
+bool mode1Held = false; // True while MODE_1_KEY is pressed
+bool mode2Held = false; // True while MODE_2_KEY is pressed
 
 // Define different constant for different envelope
 // Channel 1 variables
@@ -79,9 +80,8 @@ int data_index2 = 0, sum2 = 0;
 // Uncomment the below line to view EMG envelope on serial plotter
 // #define Calibrate
 
-
-int threshold1 = 40;
-int threshold2 = 60;
+int envelope1Threshold = 40; // for Channel 1 
+int envelope2Threshold = 60; // for Channel 2
 
 bool prevBothFlex = false;     // Stores previous loop's "both flexed" state
 unsigned long comboCount = 0;  // count of double-flex
@@ -95,15 +95,13 @@ void setup() {
   Serial.begin(BAUD_RATE);
   Keyboard.begin();
 
-  // Start in idle mode with no movement keys pressed.
-  // First accepted double-flex switches to forward mode ('w').
   pinMode(INPUT_PIN1, INPUT);
   pinMode(INPUT_PIN2, INPUT);
 
   // Start in idle mode with no movement keys pressed.
-  // First accepted double-flex switches to forward mode ('w').
-  wHeld = false;
-  sHeld = false;
+  // First accepted double-flex switches to forward mode MODE_1_KEY.
+  mode1Held = false;
+  mode2Held = false;
 }
 
 void loop() {
@@ -149,10 +147,10 @@ void loop() {
 
 #else
     //Channel 1 flex
-    bool flex1 = envelope1 > threshold1;
+    bool flex1 = envelope1 > envelope1Threshold;
 
     //Channel 2 flex
-    bool flex2 = envelope2 > threshold2;
+    bool flex2 = envelope2 > envelope2Threshold = 60;
 
     //both flex
     bool bothFlex = flex1 && flex2;
@@ -167,26 +165,26 @@ void loop() {
       comboCount++;
 
       if (comboCount % 2 == 1) {
-        // GO MODE (1st, 3rd, 5th... flex -> forward / 'w')
+        // GO MODE (1st, 3rd, 5th... flex -> forward)
         currentMode = 0;
-        if (sHeld) {
+        if (mode2Held) {
           Keyboard.release(MODE_2_KEY);
-          sHeld = false;
+          mode2Held = false;
         }
-        if (!wHeld) {
+        if (!mode1Held) {
           Keyboard.press(MODE_1_KEY);
-          wHeld = true;
+          mode1Held = true;
         }
       } else {
-        // BRAKE/REVERSE MODE (2nd, 4th... flex -> 's')
+        // BRAKE/REVERSE MODE (2nd, 4th... flex)
         currentMode = 3;
-        if (wHeld) {
+        if (mode1Held) {
           Keyboard.release(MODE_1_KEY);
-          wHeld = false;
+          mode1Held = false;
         }
-        if (!sHeld) {
+        if (!mode2Held) {
           Keyboard.press(MODE_2_KEY);
-          sHeld = true;
+          mode2Held = true;
         }
       }
     }
