@@ -60,7 +60,7 @@ This project uses the **DIY Neuroscience Kit Pro** by Upside Down Labs:
 - Alcohol/Wet Wipes
 - USB Cable (for Arduino)
 
-> 🛒 Available from: [Upside Down Labs Store](https://store.upsidedownlabs.tech/product/diy-neuroscience-kit-pro/), Amazon India, [Robu India](https://robu.in/product/diy-neuroscience-kit-pro/), [Tindie](https://www.tindie.com/products/upsidedownlabs/diy-neuroscience-kit-pro-2025-edition/), or [DigiKey](https://www.digikey.in/en/products/detail/upside-down-labs/0049/19525709).
+> 🛒 Available from: [Upside Down Labs Store](https://store.upsidedownlabs.tech/product/diy-neuroscience-kit-pro/), [Amazon India](https://www.amazon.in/Neuroscience-2025-Record-Signals-Projects/dp/B0G1LYG675/ref=sr_1_4?crid=2P4ZFMER5IXPK&dib=eyJ2IjoiMSJ9.Si8rYQUPOYfCp5IsHt0XAti_TAZ6_kxfN5ZA9-ZWKJQ6EWltKL7POaBOmzELt9r2sVgYldSpr5NuiDzTak29wIXsFQ9222gP-T5AIeQ0X-w3Egi3hRCQHE0Gl0gSC9Xeu7YhCiuy9a3x325l-82jzZjTRGrPZIOb2qF29rGTdMA.0LRojMOZFgaA3zhX2WPD9JbqTezKc8EUhy1mr_Qb6HE&dib_tag=se&keywords=diy+neuroscience+kit+pro&qid=1782799087&sprefix=diy+neur%2Caps%2C303&sr=8-4), [Robu India](https://robu.in/product/diy-neuroscience-kit-pro/), [Tindie](https://www.tindie.com/products/upsidedownlabs/diy-neuroscience-kit-pro-2025-edition/), or [DigiKey](https://www.digikey.in/en/products/detail/upside-down-labs/0049/19525709).
 
 ## Software Required
 
