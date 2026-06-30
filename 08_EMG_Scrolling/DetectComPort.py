@@ -6,7 +6,7 @@ def find_responsive_port(baudrate=115200, timeout=1):
     ports = serial.tools.list_ports.comports()
     for port in ports:
         try:
-            ser = serial.Serial('COM3', baudrate=baudrate, timeout=timeout)
+            ser = serial.Serial(port.device, baudrate=baudrate, timeout=timeout)
             ser.write(b'TEST\n')  # Write a test string to the port
             time.sleep(1) # Give the device time to respond
             response = ser.readline().strip()

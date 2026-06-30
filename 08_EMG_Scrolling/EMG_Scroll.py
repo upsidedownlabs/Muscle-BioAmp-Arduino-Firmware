@@ -40,7 +40,7 @@ def milis():
     return int(round(time.time() * 1000))
 
 # Arduino serial port interface
-ser = serial.Serial('COM3', 115200, timeout=10)
+ser = serial.Serial(find_responsive_port(), 115200, timeout=1)
 
 # Timing variable
 timer = milis()
