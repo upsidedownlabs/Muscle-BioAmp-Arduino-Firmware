@@ -193,7 +193,7 @@ const char RIGHT_ARM_KEY   = 'd'; // Steer Right
 
 | Issue | Possible Fix |
 |---|---|
-| Keys not registering at all | Check board/port selection; confirm `Keyboard.begin()` ran (re-upload); ensure board supports native USB HID |
+| Keys not registering at all | Check board/port selection; |
 | Noisy / inconsistent flex detection | Re-do skin prep; check electrode placement and contact; sit away from AC appliances/chargers.You can check out the [Document](https://docs.upsidedownlabs.tech/guides/troubleshoot/tips/index.html) for more tips. |
 | Thresholds always triggering or never triggering | Re-run calibration (Step: Calibration) and adjust `envelope1Threshold`/`envelope2Threshold` |
 | Mode toggles multiple times per flex | Increase `DOUBLE_FLEX_DEBOUNCE_MS` |

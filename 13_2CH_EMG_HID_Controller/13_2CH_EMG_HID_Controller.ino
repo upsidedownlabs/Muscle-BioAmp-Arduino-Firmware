@@ -150,7 +150,7 @@ void loop() {
     bool flex1 = envelope1 > envelope1Threshold;
 
     //Channel 2 flex
-    bool flex2 = envelope2 > envelope2Threshold = 60;
+    bool flex2 = envelope2 > envelope2Threshold;
 
     //both flex
     bool bothFlex = flex1 && flex2;
