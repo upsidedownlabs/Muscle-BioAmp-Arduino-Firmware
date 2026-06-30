@@ -31,7 +31,7 @@
 // Thank you for being part of this journey with us!
 
 
-// Sample Rate in  Hz (Samples per second)
+// Sample Rate in Hz (Samples per second)
 #define SAMPLE_RATE 500
 
 // Make sure to set the same baud rate on your Serial Monitor/Plotter

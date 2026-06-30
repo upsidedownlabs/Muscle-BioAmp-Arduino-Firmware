@@ -14,7 +14,9 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |9 | [2Channel_LCD_BarGraph](09_2Channel_LCD_BarGraph)| LCD bar graph representing EMG Amplitude using 2 Channel |
 |10 | [EMG_Rehab_Game](10_EMG_Rehab_Game)| A EMG game for persons going through rehabilitation to monitor their progress|
 |11 | [EMG_Counter](11_EMG_Counter)| Counter to count number of times EMG exceed threshold value in a time interval |
-|12 | [2CH_EMG_Game_Controller](12_2CH_EMG_Game_Controller)| An EMG game Controller to play games using hand gestures |
+|12 | [2CH_EMG_PY_Controller](12_2CH_EMG_PY_Controller)| An EMG game Controller to play games using hand gestures using Arduino and Python |
+|13 | [2CH_EMG_HID_Controller](13_2CH_EMG_HID_Controller)| An EMG game Controller to play games using hand gestures using only Arduino R4 |
+
 
 
 Compatibility of various boards with different sensors
