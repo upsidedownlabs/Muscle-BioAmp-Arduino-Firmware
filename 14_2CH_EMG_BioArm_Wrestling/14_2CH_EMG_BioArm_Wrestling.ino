@@ -1,5 +1,5 @@
-// EMG envelope - BioAmp EXG Pill
-// https://github.com/upsidedownlabs/BioAmp-EXG-Pill
+// BioArm Wrestling
+// https://github.com/upsidedownlabs/Muscle-BioAmp-Patchy
 
 // Upside Down Labs invests time and resources providing this open source code,a
 // please support Upside Down Labs and open-source hardware by purchasing
@@ -220,7 +220,7 @@ void sendTelemetry() {
   }
 }
 
-// ---- Envelope detection (unchanged) ----
+// Envelope detection
 float getEnvelope1(float abs_emg) {
   sum1 -= circular_buffer1[data_index1];
   sum1 += abs_emg;

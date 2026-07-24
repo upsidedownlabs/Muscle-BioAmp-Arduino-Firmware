@@ -11,8 +11,6 @@
     href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
   <style>
-    /* Dark is the default palette. Light mode is an override below,
-       applied via html[data-theme="light"] and toggled from the switch. */
     :root {
       --bg: #0E0A1B;
       --surface: #171029;
@@ -23,13 +21,11 @@
       --primary-dark: #8358E8;
       --primary-soft: #241B44;
       --p1: #2FD897;
-      /* channel 1 — UDL teal-green (their PCB colour) */
       --p1-soft: #113325;
       --p2: #9F75F5;
-      /* channel 2 — UDL violet */
       --p2-soft: #241B44;
       --danger: #FF6B70;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.35), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
       --dot-color: rgba(159, 117, 245, 0.12);
       --trace-grid: rgba(237, 233, 247, 0.08);
       --canvas-grad-1: #1D1733;
@@ -53,7 +49,7 @@
       --p2: #6D28D9;
       --p2-soft: #F0E9FD;
       --danger: #E5484D;
-      --shadow: 0 1px 2px rgba(28, 21, 51, 0.04), 0 8px 24px rgba(28, 21, 51, 0.06);
+      --shadow: 0 0.0625rem 0.125rem rgba(28, 21, 51, 0.04), 0 0.5rem 1.5rem rgba(28, 21, 51, 0.06);
       --dot-color: rgba(109, 40, 217, 0.08);
       --trace-grid: rgba(28, 21, 51, 0.06);
       --canvas-grad-1: #FBFAFE;
@@ -90,7 +86,7 @@
 
     body {
       background:
-        radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0) 0 0/28px 28px,
+        radial-gradient(circle at 0.0625rem 0.0625rem, var(--dot-color) 0.0625rem, transparent 0) 0 0/1.75rem 1.75rem,
         var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
@@ -98,12 +94,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 32px 20px 60px;
+      padding: 2rem 1.25rem 3.75rem;
     }
 
     .eyebrow {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 0.6875rem;
       font-weight: 500;
       letter-spacing: 0.28em;
       color: var(--primary);
@@ -113,9 +109,9 @@
     h1 {
       font-family: 'Sora', sans-serif;
       font-weight: 800;
-      font-size: clamp(28px, 4.6vw, 44px);
+      font-size: clamp(1.75rem, 4.6vw, 2.75rem);
       letter-spacing: -0.01em;
-      margin-top: 6px;
+      margin-top: 0.375rem;
       color: var(--text);
     }
 
@@ -125,39 +121,39 @@
 
     .topbar {
       width: 100%;
-      max-width: 1100px;
+      max-width: 68.75rem;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin: 26px 0 24px;
-      gap: 16px;
+      margin: 1.625rem 0 1.5rem;
+      gap: 1rem;
       flex-wrap: wrap;
     }
 
     .status-cluster {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 0.75rem;
     }
 
     .status-pill {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 0.75rem;
       letter-spacing: 0.04em;
-      padding: 8px 14px;
-      border-radius: 999px;
+      padding: 0.5rem 0.875rem;
+      border-radius: 62.4375rem;
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 0.0625rem solid var(--border);
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
       box-shadow: var(--shadow);
     }
 
     .dot {
-      width: 7px;
-      height: 7px;
+      width: 0.4375rem;
+      height: 0.4375rem;
       border-radius: 50%;
       background: var(--text-muted);
       transition: .2s;
@@ -165,7 +161,7 @@
 
     .status-pill.live .dot {
       background: var(--p1);
-      box-shadow: 0 0 0 4px var(--p1-soft);
+      box-shadow: 0 0 0 0.25rem var(--p1-soft);
     }
 
     .status-pill.live {
@@ -176,12 +172,12 @@
     button {
       font-family: 'Sora', sans-serif;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 0.875rem;
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 0.0625rem solid var(--border);
       color: var(--text);
-      padding: 11px 20px;
-      border-radius: 10px;
+      padding: 0.6875rem 1.25rem;
+      border-radius: 0.625rem;
       cursor: pointer;
       transition: .15s;
       box-shadow: var(--shadow);
@@ -193,7 +189,7 @@
     }
 
     button:active:not(:disabled) {
-      transform: translateY(1px);
+      transform: translateY(0.0625rem);
     }
 
     button:disabled {
@@ -221,14 +217,14 @@
 
     .arena {
       width: 100%;
-      max-width: 1100px;
+      max-width: 68.75rem;
       display: grid;
-      grid-template-columns: 1fr 220px 1fr;
-      gap: 18px;
+      grid-template-columns: 1fr 13.75rem 1fr;
+      gap: 1.125rem;
       align-items: stretch;
     }
 
-    @media (max-width:820px) {
+    @media (max-width:51.25rem) {
       .arena {
         grid-template-columns: 1fr;
       }
@@ -244,37 +240,37 @@
 
     .panel {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px;
+      border: 0.0625rem solid var(--border);
+      border-radius: 1.125rem;
+      padding: 1.375rem;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 0.875rem;
       position: relative;
       box-shadow: var(--shadow);
     }
 
     .panel.p1 {
-      border-top: 3px solid var(--p1);
+      border-top: 0.1875rem solid var(--p1);
     }
 
     .panel.p2 {
-      border-top: 3px solid var(--p2);
+      border-top: 0.1875rem solid var(--p2);
     }
 
     .panel-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
     }
 
     .chan-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 0.6875rem;
       letter-spacing: 0.1em;
-      padding: 4px 9px;
-      border-radius: 999px;
+      padding: 0.25rem 0.5625rem;
+      border-radius: 62.4375rem;
     }
 
     .p1 .chan-label {
@@ -290,12 +286,12 @@
     input.name {
       background: transparent;
       border: none;
-      border-bottom: 2px solid var(--border);
+      border-bottom: 0.125rem solid var(--border);
       color: var(--text);
       font-family: 'Sora', sans-serif;
       font-weight: 700;
-      font-size: 23px;
-      padding: 4px 2px 8px;
+      font-size: 1.4375rem;
+      padding: 0.25rem 0.125rem 0.5rem;
       width: 100%;
       outline: none;
     }
@@ -310,26 +306,26 @@
 
     canvas.trace {
       width: 100%;
-      height: 110px;
-      border-radius: 10px;
+      height: 6.875rem;
+      border-radius: 0.625rem;
       background: linear-gradient(180deg, var(--canvas-grad-1), var(--canvas-grad-2));
       display: block;
-      border: 1px solid var(--border);
+      border: 0.0625rem solid var(--border);
     }
 
     .strength-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 0.625rem;
     }
 
     .strength-track {
       flex: 1;
-      height: 9px;
-      border-radius: 6px;
+      height: 0.5625rem;
+      border-radius: 0.375rem;
       background: var(--bg);
       overflow: hidden;
-      border: 1px solid var(--border);
+      border: 0.0625rem solid var(--border);
     }
 
     .strength-fill {
@@ -348,60 +344,60 @@
 
     .strength-num {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      font-size: 0.8125rem;
       color: var(--text-muted);
-      width: 44px;
+      width: 2.75rem;
       text-align: right;
     }
 
     .gauge-col {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      border: 0.0625rem solid var(--border);
+      border-radius: 1.125rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 28px 10px;
-      gap: 18px;
+      padding: 1.75rem 0.625rem;
+      gap: 1.125rem;
       box-shadow: var(--shadow);
     }
 
     .vs {
       font-family: 'Sora', sans-serif;
       font-weight: 800;
-      font-size: 20px;
+      font-size: 1.25rem;
       letter-spacing: 0.06em;
       color: var(--primary);
       background: var(--primary-soft);
-      padding: 4px 14px;
-      border-radius: 999px;
+      padding: 0.25rem 0.875rem;
+      border-radius: 62.4375rem;
     }
 
     .cal-readout {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-align: center;
-      min-height: 16px;
+      min-height: 1rem;
     }
 
     .controls {
       width: 100%;
-      max-width: 1100px;
+      max-width: 68.75rem;
       display: flex;
-      gap: 12px;
+      gap: 0.75rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 26px;
+      margin-top: 1.625rem;
     }
 
     .log {
       width: 100%;
-      max-width: 1100px;
-      margin-top: 16px;
+      max-width: 68.75rem;
+      margin-top: 1rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 0.6875rem;
       color: var(--text-muted);
       text-align: center;
       letter-spacing: 0.02em;
@@ -414,7 +410,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(0.375rem);
       z-index: 20;
     }
 
@@ -424,25 +420,25 @@
 
     .win-card {
       text-align: center;
-      padding: 40px 60px;
-      border-radius: 22px;
+      padding: 2.5rem 3.75rem;
+      border-radius: 1.375rem;
       background: var(--surface);
-      border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(28, 21, 51, 0.18);
+      border: 0.0625rem solid var(--border);
+      box-shadow: 0 1.25rem 3.75rem rgba(28, 21, 51, 0.18);
     }
 
     .win-eyebrow {
       font-family: 'JetBrains Mono', monospace;
       letter-spacing: 0.3em;
-      font-size: 12px;
+      font-size: 0.75rem;
       color: var(--text-muted);
     }
 
     .win-name {
       font-family: 'Sora', sans-serif;
       font-weight: 800;
-      font-size: clamp(38px, 6.5vw, 64px);
-      margin: 10px 0 24px;
+      font-size: clamp(2.375rem, 6.5vw, 4rem);
+      margin: 0.625rem 0 1.5rem;
     }
 
     .win-name.p1 {
@@ -453,7 +449,6 @@
       color: var(--p2);
     }
 
-    /* ---- arm-wrestle motifs ---- */
     .muscle-icon {
       flex-shrink: 0;
     }
@@ -461,13 +456,13 @@
     .p1 .chan-label {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 0.375rem;
     }
 
     .p2 .chan-label {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 0.375rem;
     }
 
     @keyframes flex-pulse {
@@ -478,7 +473,7 @@
       }
 
       50% {
-        box-shadow: 0 0 0 3px var(--glow-color, var(--primary-soft)), var(--shadow);
+        box-shadow: 0 0 0 0.1875rem var(--glow-color, var(--primary-soft)), var(--shadow);
       }
     }
 
@@ -512,19 +507,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 0.125rem;
     }
 
     .clash-badge svg {
-      width: 34px;
-      height: 22px;
+      width: 2.125rem;
+      height: 1.375rem;
     }
 
-    /* ---- win-proximity muscle meter (replaces the old vertical gauge) ---- */
     .muscle-meter {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 0.75rem;
     }
 
     .panel.p2 .muscle-meter {
@@ -532,8 +526,8 @@
     }
 
     .muscle-svg {
-      width: 250px;
-      height: 250px;
+      width: 15.625rem;
+      height: 15.625rem;
       flex-shrink: 0;
       overflow: visible;
     }
@@ -586,7 +580,7 @@
     .muscle-readout {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 0.125rem;
     }
 
     .panel.p2 .muscle-readout {
@@ -595,7 +589,7 @@
 
     .muscle-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 0.625rem;
       letter-spacing: 0.12em;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -604,7 +598,7 @@
     .muscle-pct {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 19px;
+      font-size: 1.1875rem;
       transition: color .2s ease;
     }
 
@@ -616,7 +610,6 @@
       color: var(--p2);
     }
 
-    /* ---- dark / light mode toggle ---- */
     .theme-toggle {
       background: none;
       border: none;
@@ -633,21 +626,21 @@
 
     .theme-toggle-track {
       position: relative;
-      width: 56px;
-      height: 30px;
+      width: 3.5rem;
+      height: 1.875rem;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
+      border: 0.0625rem solid var(--border);
+      border-radius: 62.4375rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 7px;
+      padding: 0 0.4375rem;
       box-shadow: var(--shadow);
     }
 
     .theme-toggle-track svg {
-      width: 13px;
-      height: 13px;
+      width: 0.8125rem;
+      height: 0.8125rem;
       position: relative;
       z-index: 1;
       color: var(--text-muted);
@@ -656,37 +649,36 @@
 
     .theme-toggle-thumb {
       position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 22px;
-      height: 22px;
+      top: 0.1875rem;
+      left: 0.1875rem;
+      width: 1.375rem;
+      height: 1.375rem;
       border-radius: 50%;
       background: var(--primary);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.35);
       transform: translateX(0);
       transition: transform .25s cubic-bezier(.4, 0, .2, 1), background-color .25s ease;
     }
 
     html[data-theme="light"] .theme-toggle-thumb {
-      transform: translateX(26px);
+      transform: translateX(1.625rem);
       background: #F5A623;
     }
 
-    /* ---- top-left UDL brand mark, swaps with the theme ---- */
     .udl-logo {
       position: fixed;
-      top: 20px;
-      left: 20px;
-      height: 50px;
+      top: 1.25rem;
+      left: 1.25rem;
+      height: 3.125rem;
       width: auto;
       z-index: 15;
     }
 
-    @media (max-width:820px) {
+    @media (max-width:51.25rem) {
       .udl-logo {
-        top: 14px;
-        left: 14px;
-        height: 24px;
+        top: 0.875rem;
+        left: 0.875rem;
+        height: 1.5rem;
       }
     }
   </style>
@@ -702,7 +694,7 @@
       <div class="status-pill" id="connPill"><span class="dot"></span><span id="connText">Not connected</span></div>
       <div class="status-pill" id="statePill"><span class="dot"></span><span id="stateText">Idle</span></div>
     </div>
-    <div style="display:flex;gap:10px;align-items:center;">
+    <div style="display:flex;gap:0.625rem;align-items:center;">
       <button id="connectBtn" class="primary">Connect to Arduino</button>
       <button id="disconnectBtn" disabled>Disconnect</button>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
@@ -840,7 +832,7 @@
     <div class="win-card">
       <div class="win-eyebrow">WINNER</div>
       <div class="win-name" id="winName">—</div>
-      <div style="display:flex;gap:12px;justify-content:center;">
+      <div style="display:flex;gap:0.75rem;justify-content:center;">
         <button class="primary" id="overlayRematch">Rematch</button>
         <button id="overlayNewOpp">New Opponents</button>
       </div>
@@ -860,18 +852,12 @@
       const p1NameInput = $('p1Name'), p2NameInput = $('p2Name');
 
       let port, reader, writer, keepReading = false;
-      // Web Serial streams give/take raw bytes (Uint8Array), not strings.
-      // We pipe through TextDecoderStream/TextEncoderStream so reader.read()
-      // yields text chunks and writer.write() accepts plain strings.
       let textDecoder, readableStreamClosed, textEncoder, writableStreamClosed;
       let lineBuffer = '';
-      let gameState = 'idle'; // idle | calibrating | playing | gameover
+      let gameState = 'idle';
 
-      const MAX_STRENGTH = 150; // matches the 150.0f envelope clamp on the board
+      const MAX_STRENGTH = 150;
 
-      // ---- rolling waveform traces (UDL channel colours: teal-green / violet) ----
-      // Colours are read live from CSS variables so the traces follow the
-      // active theme (dark by default, light when toggled) without a redraw call.
       function cssVar(name) {
         return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
       }
@@ -895,13 +881,11 @@
           const w = canvas.width, h = canvas.height;
           const color = cssVar(colorVar) || '#6D28D9';
           ctx.clearRect(0, 0, w, h);
-          // faint gridlines
           ctx.strokeStyle = cssVar('--trace-grid') || 'rgba(28,21,51,0.06)';
           ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
           if (data.length < 2) return;
 
-          // filled area under the trace
           ctx.beginPath();
           data.forEach((v, i) => {
             const x = (i / (159)) * w;
@@ -913,7 +897,6 @@
           ctx.fillStyle = color + '1a';
           ctx.fill();
 
-          // trace line
           ctx.strokeStyle = color;
           ctx.lineWidth = 2.4 * devicePixelRatio;
           ctx.lineJoin = 'round';
@@ -932,22 +915,13 @@
       const p1Trace = makeTrace('p1Canvas', '--p1');
       const p2Trace = makeTrace('p2Canvas', '--p2');
 
-      // ---- win-proximity "muscle" meters (replace the old tug-of-war gauge) ----
-      // Each meter fills like a liquid gauge, from 0% (far from winning) to
-      // 100% (about to win), by revealing more of the flexed-bicep shape
-      // via a clip-path rect that grows from the bottom up.
       const p1MuscleClipRect = $('p1MuscleClipRect');
       const p2MuscleClipRect = $('p2MuscleClipRect');
       const p1MusclePct = $('p1MusclePct');
       const p2MusclePct = $('p2MusclePct');
       const MUSCLE_VIEWBOX_TOP = -2;
       const MUSCLE_VIEWBOX_BOTTOM = 26;
-      const MUSCLE_VIEWBOX_H = MUSCLE_VIEWBOX_BOTTOM - MUSCLE_VIEWBOX_TOP; // 28
-      // Must mirror the Arduino sketch: startGame() sets armAngle = 45.0f.
-      // Channel 1 (A0) CLOSES the claw, driving armAngle up toward
-      // SERVO_MAX (90) -> checkGameOver() fires WIN,1 there.
-      // Channel 2 (A1) OPENS the claw, driving armAngle down toward
-      // SERVO_MIN (10) -> checkGameOver() fires WIN,2 there.
+      const MUSCLE_VIEWBOX_H = MUSCLE_VIEWBOX_BOTTOM - MUSCLE_VIEWBOX_TOP;
       const ANGLE_START = 45;
       const ANGLE_P1_WIN = 90;
       const ANGLE_P2_WIN = 10;
@@ -981,7 +955,6 @@
 
       function log(msg) { logLine.textContent = msg; }
 
-      // ---- Web Serial plumbing ----
       async function connect() {
         try {
           if (!port) {
@@ -1001,12 +974,10 @@
       async function openPort() {
         await port.open({ baudRate: 115200 });
 
-        // Decode incoming bytes to text before we ever touch lineBuffer.
         textDecoder = new TextDecoderStream();
         readableStreamClosed = port.readable.pipeTo(textDecoder.writable).catch(() => { });
         reader = textDecoder.readable.getReader();
 
-        // Encode outgoing strings to bytes before they hit the port.
         textEncoder = new TextEncoderStream();
         writableStreamClosed = textEncoder.readable.pipeTo(port.writable).catch(() => { });
         writer = textEncoder.writable.getWriter();
@@ -1033,7 +1004,6 @@
             }
           }
         } catch (e) {
-          // The board was unplugged (or the port dropped) mid-read.
           if (keepReading) handleDeviceLost();
         }
       }
@@ -1075,8 +1045,6 @@
         setGameState('idle');
         log('Disconnected.');
       }
-      // Fires when the USB cable is pulled or the board loses power unexpectedly —
-      // the port object is already dead, so just drop our references and reset the UI.
       function handleDeviceLost() {
         keepReading = false;
         reader = null; writer = null;
@@ -1115,17 +1083,15 @@
         try { await writer.write(cmd + '\n'); } catch (e) { handleDeviceLost(); }
       }
 
-      // try to silently reattach to a previously authorized port
       async function tryAutoReconnect() {
         if (!('serial' in navigator)) return;
         const ports = await navigator.serial.getPorts();
         if (ports.length) {
           port = ports[0];
-          try { await openPort(); } catch (e) { /* needs a fresh user gesture, ignore */ }
+          try { await openPort(); } catch (e) { }
         }
       }
 
-      // React live to USB unplug/replug events, so the page never needs a refresh.
       if ('serial' in navigator) {
         navigator.serial.addEventListener('disconnect', (event) => {
           if (event.target === port) handleDeviceLost();
@@ -1133,13 +1099,11 @@
         navigator.serial.addEventListener('connect', async (event) => {
           if (!keepReading) {
             port = event.target;
-            try { await openPort(); } catch (e) { /* board not fully ready yet, ignore */ }
+            try { await openPort(); } catch (e) { }
           }
         });
       }
 
-
-      // ---- protocol handling ----
       function handleLine(line) {
         const parts = line.split(',');
         switch (parts[0]) {
@@ -1174,7 +1138,7 @@
       const p2Panel = document.querySelector('.panel.p2');
       const p1Icon = document.querySelector('.panel.p1 .muscle-icon');
       const p2Icon = document.querySelector('.panel.p2 .muscle-icon');
-      const FLEX_THRESHOLD = 55; // % of max strength that counts as "flexing"
+      const FLEX_THRESHOLD = 55;
 
       function updateTelemetry(a1, a2, angle) {
         p1Trace.push(a1); p2Trace.push(a2);
@@ -1190,11 +1154,6 @@
         p1Icon.style.transform = `scale(${1 + (p1pct / 100) * 0.6})`;
         p2Icon.style.transform = `scale(${1 + (p2pct / 100) * 0.6})`;
 
-        // Zero-sum tug meter: both read exactly 50% at kickoff (angle ===
-        // ANGLE_START), then move in opposite directions as the arm tips
-        // toward whichever player's actual win angle (per the Arduino
-        // sketch above). Each half is normalized to its own distance so
-        // 100% lands exactly on that player's win angle.
         let p1Pct, p2Pct;
         if (angle >= ANGLE_START) {
           p1Pct = 50 + 50 * (angle - ANGLE_START) / (ANGLE_P1_WIN - ANGLE_START);
@@ -1207,7 +1166,6 @@
         setMuscleFill(p2MuscleClipRect, p2MusclePct, p2Pct);
       }
 
-      // ---- controls ----
       connectBtn.addEventListener('click', connect);
       disconnectBtn.addEventListener('click', disconnect);
       startBtn.addEventListener('click', () => { winOverlay.classList.remove('show'); runCountdown('START'); });
@@ -1238,7 +1196,6 @@
         tryAutoReconnect();
       }
 
-      // ---- dark / light theme toggle (dark is the default) ----
       const themeToggle = $('themeToggle');
       const udlLogo = $('udlLogo');
       let theme = 'dark';
@@ -1250,9 +1207,7 @@
           document.documentElement.removeAttribute('data-theme');
         }
         themeToggle.setAttribute('aria-pressed', String(theme === 'light'));
-        // Dark background -> white mark; light background -> black mark.
         udlLogo.src = theme === 'light' ? 'udl_logo_black.svg' : 'udl_logo_white.svg';
-        // Re-paint the traces so their stroke colour follows the new theme immediately.
         p1Trace.redraw();
         p2Trace.redraw();
       }
