@@ -70,7 +70,7 @@ This project uses the **Muscle BioAmp Patchy** by Upside Down Labs:
 ## Hardware Setup
 
 ### Step 1: Wire up the Patchy boards
-Connect each Muscle BioAmp Patchy to the cable provided with it, and connect the supplied snap cable to female-to-female jumper wires.. Then connect those cables to respective channels:
+Connect each Muscle BioAmp Patchy to the cable provided with it, and connect the supplied snap cable to female-to-female jumper wires. Then connect those cables to respective channels:
 - Player 1's Patchy → `A0`
 - Player 2's Patchy → `A1`
 
@@ -113,7 +113,7 @@ Good skin contact is the single biggest factor in clean EMG signal — spend the
 8. Select the correct port: `Tools → Port` (disconnect/reconnect the Arduino if the port isn't listed).
 9. Click **Upload** (→) and wait for it to complete.
 
-> ⚠️ **Important:** For best signal quality, **unplug your laptop charger** and sit **at least 5 meters away from AC appliances** while playing. This minimizes electrical interference (50/60 Hz noise) on the EMG signal.
+> **Important:** For best signal quality, **unplug your laptop charger** and sit **at least 5 meters away from AC appliances** while playing. This minimizes electrical interference (50/60 Hz noise) on the EMG signal.
 
 ---
 

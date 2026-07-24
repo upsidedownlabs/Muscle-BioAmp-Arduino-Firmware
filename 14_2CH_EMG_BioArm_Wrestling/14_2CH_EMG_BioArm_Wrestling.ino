@@ -59,7 +59,7 @@ float sum2 = 0;
 int data_index2 = 0;
 
 Servo servo;
-float armAngle = 45.0f;
+float armAngle = 50.0f;
 uint32_t lastServo = 0;
 uint32_t lastTelemetry = 0;
 
@@ -76,6 +76,7 @@ enum GameState { ST_IDLE,
 GameState state = ST_IDLE;
 
 // Incoming command line buffer
+constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
 
 void setup() {
@@ -143,7 +144,9 @@ void readCommands() {
         rxLine = "";
       }
     } else {
-      rxLine += c;
+      if (rxLine.length() < MAX_CMD_LEN) {
+        rxLine += c;
+      }
     }
   }
 }
@@ -160,7 +163,7 @@ void startGame() {
 
   resetEnvelope();
   armAngle = 45.0f;
-  servo.write(45);
+  servo.write(50);
 
   strength1 = strength2 = 0.0f;
   active1 = active2 = 0.0f;

@@ -24,7 +24,7 @@
       --p1-soft: #113325;
       --p2: #9F75F5;
       --p2-soft: #241B44;
-      --danger: #FF6B70;
+      --danger: #FF6B70;  
       --shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.35), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
       --dot-color: rgba(159, 117, 245, 0.12);
       --trace-grid: rgba(237, 233, 247, 0.08);
@@ -856,6 +856,8 @@
       let lineBuffer = '';
       let gameState = 'idle';
 
+      let countdownInterval = null;
+
       const MAX_STRENGTH = 150;
 
       function cssVar(name) {
@@ -1008,6 +1010,7 @@
         }
       }
       async function disconnect() {
+        cancelCountdown();
         keepReading = false;
         try {
           if (reader) {
@@ -1046,6 +1049,7 @@
         log('Disconnected.');
       }
       function handleDeviceLost() {
+        cancelCountdown();
         keepReading = false;
         reader = null; writer = null;
         textDecoder = null; textEncoder = null;
@@ -1061,17 +1065,26 @@
         log('Board disconnected — plug it back in to reconnect automatically.');
       }
 
+      function cancelCountdown() {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+      }
+
       function runCountdown(cmd) {
+        cancelCountdown();
         startBtn.disabled = true;
         rematchBtn.disabled = true;
+        newOppBtn.disabled = true;
         let n = 3;
         calReadout.textContent = `Get ready… ${n}`;
-        const iv = setInterval(() => {
+        countdownInterval = setInterval(() => {
           n--;
           if (n > 0) {
             calReadout.textContent = `Get ready… ${n}`;
           } else {
-            clearInterval(iv);
+            cancelCountdown();
             calReadout.textContent = 'Go!';
             sendCmd(cmd);
           }
@@ -1123,12 +1136,15 @@
           }
           case 'WIN': {
             const who = parts[1];
-            const name = who === '1' ? p1NameInput.value : p2NameInput.value;
-            winName.textContent = name || (who === '1' ? 'Player 1' : 'Player 2');
+            // Resolve the same fallback name for both the overlay title and
+            // the status readout so an empty name field doesn't leave the
+            // status line reading " wins the round".
+            const resolvedName = (who === '1' ? p1NameInput.value : p2NameInput.value) || (who === '1' ? 'Player 1' : 'Player 2');
+            winName.textContent = resolvedName;
             winName.className = 'win-name ' + (who === '1' ? 'p1' : 'p2');
             winOverlay.classList.add('show');
             setGameState('gameover');
-            calReadout.textContent = `${name} wins the round`;
+            calReadout.textContent = `${resolvedName} wins the round`;
             break;
           }
         }
@@ -1172,6 +1188,7 @@
       rematchBtn.addEventListener('click', () => { winOverlay.classList.remove('show'); runCountdown('REMATCH'); });
       $('overlayRematch').addEventListener('click', () => rematchBtn.click());
       newOppBtn.addEventListener('click', () => {
+        cancelCountdown();
         p1NameInput.value = '';
         p2NameInput.value = '';
         p1NameInput.focus();
@@ -1186,7 +1203,6 @@
         winOverlay.classList.remove('show');
         log('New opponents — enter names, then Start Duel.');
       });
-      $('overlayRematch').addEventListener('click', () => rematchBtn.click());
       $('overlayNewOpp').addEventListener('click', () => newOppBtn.click());
 
       if (!('serial' in navigator)) {
