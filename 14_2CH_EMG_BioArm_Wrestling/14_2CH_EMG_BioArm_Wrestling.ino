@@ -48,16 +48,6 @@
 #define ANGLE_SENSNTIVITY 0.03f
 #define LED_PIN LED_BUILTIN
 
-// Channel 1 envelope state
-float circular_buffer1[BUFFER_SIZE] = { 0 };
-float sum1 = 0;
-int data_index1 = 0;
-
-// Channel 2 envelope state
-float circular_buffer2[BUFFER_SIZE] = { 0 };
-float sum2 = 0;
-int data_index2 = 0;
-
 Servo servo;
 float armAngle = 50.0f;
 uint32_t lastServo = 0;
@@ -79,61 +69,85 @@ GameState state = ST_IDLE;
 constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
 
-void setup() {
-  Serial.begin(BAUD_RATE);
-  while (!Serial)
-    delay(10);
+class EMGChannel {
+private:
+  float circular_buffer[BUFFER_SIZE] = { 0 };
+  float sum = 0;
+  int data_index = 0;
 
-  servo.attach(SERVO_PIN);
-  servo.write(50);
+  // Filter state
+  float s1_z1 = 0, s1_z2 = 0;
+  float s2_z1 = 0, s2_z2 = 0;
+  float s3_z1 = 0, s3_z2 = 0;
+  float s4_z1 = 0, s4_z2 = 0;
 
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+public:
+  void reset() {
+    sum = 0;
+    data_index = 0;
 
-  Serial.println("READY");
-}
+    for (int i = 0; i < BUFFER_SIZE; i++)
+      circular_buffer[i] = 0;
 
-void loop() {
-  readCommands();
-
-  if (state == ST_IDLE || state == ST_GAMEOVER) {
-    return;
+    s1_z1 = s1_z2 = 0;
+    s2_z1 = s2_z2 = 0;
+    s3_z1 = s3_z2 = 0;
+    s4_z1 = s4_z2 = 0;
   }
 
-  static unsigned long past = 0;
-  unsigned long present = micros();
-  unsigned long interval = present - past;
-  past = present;
+// Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
+// Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
+// Filter is order 4, implemented as second-order sections (biquads).
+// Reference:
+// https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
+// https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
+  float filter(float input) {
+    float output = input;
 
-  static long timer = 0;
-  timer -= interval;
+    {
+      float x = output - 0.05159732f * s1_z1 - 0.36347401f * s1_z2;
+      output = 0.01856301f * x + 0.03712602f * s1_z1 + 0.01856301f * s1_z2;
+      s1_z2 = s1_z1;
+      s1_z1 = x;
+    }
 
-  if (timer < 0) {
-    timer += 1000000 / SAMPLE_RATE;
+    {
+      float x = output - -0.53945795f * s2_z1 - 0.39764934f * s2_z2;
+      output = x - 2.0f * s2_z1 + s2_z2;
+      s2_z2 = s2_z1;
+      s2_z1 = x;
+    }
 
-    float sensor_value1 = analogRead(CHANNEL_1);
-    float sensor_value2 = analogRead(CHANNEL_2);
+    {
+      float x = output - 0.47319594f * s3_z1 - 0.70744137f * s3_z2;
+      output = x + 2.0f * s3_z1 + s3_z2;
+      s3_z2 = s3_z1;
+      s3_z1 = x;
+    }
 
-    float signal1 = EMGFilter1(sensor_value1);
-    float signal2 = EMGFilter2(sensor_value2);
+    {
+      float x = output - -1.00211112f * s4_z1 - 0.74520226f * s4_z2;
+      output = x - 2.0f * s4_z1 + s4_z2;
+      s4_z2 = s4_z1;
+      s4_z1 = x;
+    }
 
-    float envelope1 = min(getEnvelope1(fabsf(signal1)), 150.0f);
-    float envelope2 = min(getEnvelope2(fabsf(signal2)), 150.0f);
-
-    active1 = max(0.0f, envelope1);
-    active2 = max(0.0f, envelope2);
-
-    strength1 = 0.9f * strength1 + 0.1f * active1;
-    strength2 = 0.9f * strength2 + 0.1f * active2;
-
-    diff = active1 - active2;
-    diff = constrain(diff, -10.0f, 10.0f);
-    if (fabsf(diff) < DEADZONE_DIFF) diff = 0.0f;
-
-    updateServo();
-    sendTelemetry();
+    return output;
   }
-}
+
+  // Algorithm to get the envelope of EMG waves
+  float envelope(float abs_emg) {
+    sum -= circular_buffer[data_index];
+    sum += abs_emg;
+    circular_buffer[data_index] = abs_emg;
+    data_index = (data_index + 1) % BUFFER_SIZE;
+
+    return (sum / BUFFER_SIZE) * 2.0f;
+  }
+};
+// Filter objects
+EMGChannel player1;
+EMGChannel player2;
 
 void readCommands() {
   while (Serial.available()) {
@@ -161,8 +175,9 @@ void handleCommand(String cmd) {
 void startGame() {
   digitalWrite(LED_PIN, LOW);
 
-  resetEnvelope();
-  armAngle = 45.0f;
+  player1.reset();
+  player2.reset();
+  armAngle = 50.0f;
   servo.write(50);
 
   strength1 = strength2 = 0.0f;
@@ -172,18 +187,6 @@ void startGame() {
 
   state = ST_PLAYING;
   Serial.println("STARTED");
-}
-
-void resetEnvelope() {
-  sum1 = 0;
-  sum2 = 0;
-  data_index1 = 0;
-  data_index2 = 0;
-
-  for (int i = 0; i < BUFFER_SIZE; i++) {
-    circular_buffer1[i] = 0;
-    circular_buffer2[i] = 0;
-  }
 }
 
 void updateServo() {
@@ -223,91 +226,58 @@ void sendTelemetry() {
   }
 }
 
-// Envelope detection
-float getEnvelope1(float abs_emg) {
-  sum1 -= circular_buffer1[data_index1];
-  sum1 += abs_emg;
-  circular_buffer1[data_index1] = abs_emg;
-  data_index1 = (data_index1 + 1) % BUFFER_SIZE;
-  return (sum1 / BUFFER_SIZE) * 2;
+void setup() {
+  Serial.begin(BAUD_RATE);
+  while (!Serial)
+    delay(10);
+
+  servo.attach(SERVO_PIN);
+  servo.write(50);
+
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+
+  Serial.println("READY");
 }
 
-float getEnvelope2(float abs_emg) {
-  sum2 -= circular_buffer2[data_index2];
-  sum2 += abs_emg;
-  circular_buffer2[data_index2] = abs_emg;
-  data_index2 = (data_index2 + 1) % BUFFER_SIZE;
-  return (sum2 / BUFFER_SIZE) * 2;
-}
+void loop() {
+  readCommands();
 
-// Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
-// Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
-// Filter is order 4, implemented as second-order sections (biquads).
-// Reference:
-// https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-// https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
-float EMGFilter1(float input) {
-  float output = input;
-  {
-    static float z1, z2;
-    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
-    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
-    z2 = z1;
-    z1 = x;
+  if (state == ST_IDLE || state == ST_GAMEOVER) {
+    return;
   }
-  {
-    static float z1, z2;
-    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
-    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2;
-    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
-    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2;
-    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
-    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  return output;
-}
 
-float EMGFilter2(float input) {
-  float output = input;
-  {
-    static float z1, z2;
-    float x = output - 0.05159732 * z1 - 0.36347401 * z2;
-    output = 0.01856301 * x + 0.03712602 * z1 + 0.01856301 * z2;
-    z2 = z1;
-    z1 = x;
+  static unsigned long past = 0;
+  unsigned long present = micros();
+  unsigned long interval = present - past;
+  past = present;
+
+  static long timer = 0;
+  timer -= interval;
+
+  if (timer < 0) {
+    timer += 1000000 / SAMPLE_RATE;
+
+    float sensor_value1 = analogRead(CHANNEL_1);
+    float sensor_value2 = analogRead(CHANNEL_2);
+
+    float signal1 = player1.filter(sensor_value1);
+    float signal2 = player2.filter(sensor_value2);
+
+    float envelope1 = player1.envelope(fabsf(signal1));
+    float envelope2 = player2.envelope(fabsf(signal2));
+
+    active1 = max(0.0f, envelope1);
+    active2 = max(0.0f, envelope2);
+
+    strength1 = 0.9f * strength1 + 0.1f * active1;
+    strength2 = 0.9f * strength2 + 0.1f * active2;
+
+    diff = active1 - active2;
+    diff = constrain(diff, -10.0f, 10.0f);
+    if (fabsf(diff) < DEADZONE_DIFF) diff = 0.0f;
+
+    updateServo();
+    sendTelemetry();
   }
-  {
-    static float z1, z2;
-    float x = output - -0.53945795 * z1 - 0.39764934 * z2;
-    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2;
-    float x = output - 0.47319594 * z1 - 0.70744137 * z2;
-    output = 1.00000000 * x + 2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  {
-    static float z1, z2;
-    float x = output - -1.00211112 * z1 - 0.74520226 * z2;
-    output = 1.00000000 * x + -2.00000000 * z1 + 1.00000000 * z2;
-    z2 = z1;
-    z1 = x;
-  }
-  return output;
 }
