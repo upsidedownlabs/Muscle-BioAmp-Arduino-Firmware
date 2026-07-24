@@ -139,6 +139,9 @@ void loop() {
           flag = 0;
           lastGestureTime = millis();
         } else {
+
+
+          
           servo.write(SERVO_CLOSE);
           flag = 1;
           lastGestureTime = millis();
