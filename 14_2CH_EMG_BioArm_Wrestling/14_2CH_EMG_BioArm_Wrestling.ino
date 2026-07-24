@@ -59,6 +59,9 @@ float active1 = 0.0f;
 float active2 = 0.0f;
 float diff = 0.0f;
 
+unsigned long samplePast = 0;
+long sampleTimer = 0;
+
 // Game state machine
 enum GameState { ST_IDLE,
                  ST_PLAYING,
@@ -95,12 +98,12 @@ public:
     s4_z1 = s4_z2 = 0;
   }
 
-// Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
-// Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
-// Filter is order 4, implemented as second-order sections (biquads).
-// Reference:
-// https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-// https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
+  // Band-Pass Butterworth IIR digital filter, generated using filter_gen.py.
+  // Sampling rate: 500.0 Hz, frequency: [74.5, 149.5] Hz.
+  // Filter is order 4, implemented as second-order sections (biquads).
+  // Reference:
+  // https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
+  // https://courses.ideate.cmu.edu/16-223/f2020/Arduino/FilterDemos/filter_gen.py
   float filter(float input) {
     float output = input;
 
@@ -184,6 +187,8 @@ void startGame() {
   active1 = active2 = 0.0f;
   diff = 0.0f;
   lastServo = 0;
+  samplePast = 0;
+  sampleTimer = 0;
 
   state = ST_PLAYING;
   Serial.println("STARTED");
@@ -247,16 +252,14 @@ void loop() {
     return;
   }
 
-  static unsigned long past = 0;
   unsigned long present = micros();
-  unsigned long interval = present - past;
-  past = present;
+  unsigned long interval = present - samplePast;
+  samplePast = present;
 
-  static long timer = 0;
-  timer -= interval;
+  sampleTimer -= interval;
 
-  if (timer < 0) {
-    timer += 1000000 / SAMPLE_RATE;
+  if (sampleTimer < 0) {
+    sampleTimer += 1000000 / SAMPLE_RATE;
 
     float sensor_value1 = analogRead(CHANNEL_1);
     float sensor_value2 = analogRead(CHANNEL_2);
