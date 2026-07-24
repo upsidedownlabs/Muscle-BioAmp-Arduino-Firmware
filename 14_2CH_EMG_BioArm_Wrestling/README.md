@@ -1,4 +1,4 @@
-# BioArm Wrestling – Arm Wrestle with Your Muscles 💪🎮
+# BioArm Wrestling – Arm Wrestle with Your Muscles
 
 Turn real muscle activity into a head-to-head arm wrestling match! This project uses **Electromyography (EMG)** signals from two players' forearms to drive a servo-controlled arm, live-visualized in a browser dashboard. Whoever flexes harder wins the round.
 
