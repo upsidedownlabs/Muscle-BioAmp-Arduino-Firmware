@@ -6,6 +6,7 @@
 // products from Upside Down Labs!
 
 // Copyright (c) 2021 - 2024 Upside Down Labs - contact@upsidedownlabs.tech
+// Copyright (c) 2026 Varun Patil - vap05072006@gmail.com
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,27 +33,33 @@
 
 #include <Servo.h>
 
+// Number of EMG samples acquired per second
 #define SAMPLE_RATE 500
 #define BAUD_RATE 115200
 
-#define CHANNEL_1 A0  // closes the claw
-#define CHANNEL_2 A1  // opens the claw
+#define CHANNEL_1 A0  // Player 1 who has to close the servo claw
+#define CHANNEL_2 A1  // Player 2 who has to open the servo claw
+
 
 #define BUFFER_SIZE 64
 #define DEADZONE_DIFF 5.0f
+
+// Servo control macros
 #define SERVO_PIN 2
 #define SERVO_OPEN 10.0f
 #define SERVO_CLOSE 90.0f
 #define SERVO_MIN 10.0f
 #define SERVO_MAX 90.0f
-#define ANGLE_SENSNTIVITY 0.03f
+#define ANGLE_SENSITIVITY 0.03f
 #define LED_PIN LED_BUILTIN
 
+// Servo control global variables
 Servo servo;
 float armAngle = 50.0f;
 uint32_t lastServo = 0;
 uint32_t lastTelemetry = 0;
 
+// EMG signal processing
 float strength1 = 0.0f;
 float strength2 = 0.0f;
 float active1 = 0.0f;
@@ -68,10 +75,11 @@ enum GameState { ST_IDLE,
                  ST_GAMEOVER };
 GameState state = ST_IDLE;
 
-// Incoming command line buffer
+// Buffer for incoming serial commands
 constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
 
+// Class for EMG signal processing and envelope detection
 class EMGChannel {
 private:
   float circular_buffer[BUFFER_SIZE] = { 0 };
@@ -85,6 +93,7 @@ private:
   float s4_z1 = 0, s4_z2 = 0;
 
 public:
+  // Resets the filter state and envelope buffer for a fresh game
   void reset() {
     sum = 0;
     data_index = 0;
@@ -152,6 +161,7 @@ public:
 EMGChannel player1;
 EMGChannel player2;
 
+// Reads complete serial commands from the web interface
 void readCommands() {
   while (Serial.available()) {
     char c = Serial.read();
@@ -168,6 +178,7 @@ void readCommands() {
   }
 }
 
+// Processes commands received from the web interface
 void handleCommand(String cmd) {
   cmd.trim();
   if (cmd == "START" || cmd == "REMATCH") {
@@ -175,6 +186,7 @@ void handleCommand(String cmd) {
   }
 }
 
+// Resets the game state and starts a new match
 void startGame() {
   digitalWrite(LED_PIN, LOW);
 
@@ -194,11 +206,12 @@ void startGame() {
   Serial.println("STARTED");
 }
 
+// Updates the servo position
 void updateServo() {
   if (millis() - lastServo >= 20) {
     lastServo = millis();
 
-    armAngle += diff * ANGLE_SENSNTIVITY;
+    armAngle += diff * ANGLE_SENSITIVITY;
     armAngle = constrain(armAngle, SERVO_OPEN, SERVO_CLOSE);
 
     servo.write(armAngle);
@@ -207,6 +220,7 @@ void updateServo() {
   }
 }
 
+// Detects the winner when the servo reaches either end position
 void checkGameOver() {
   if (armAngle <= SERVO_MIN) {
     servo.write(SERVO_MIN);
@@ -219,8 +233,9 @@ void checkGameOver() {
   }
 }
 
+// Transmits player EMG activity and servo position to the web interface at 50 Hz
 void sendTelemetry() {
-  if (millis() - lastTelemetry >= 20) {  // ~50 Hz
+  if (millis() - lastTelemetry >= 20) {
     lastTelemetry = millis();
     Serial.print("EMG,");
     Serial.print(active1);

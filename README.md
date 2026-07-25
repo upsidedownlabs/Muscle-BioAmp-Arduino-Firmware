@@ -16,7 +16,7 @@ Firmware for Muscle BioAmp hardware from Upside Down Labs
 |11 | [EMG_Counter](11_EMG_Counter)| Counter to count number of times EMG exceed threshold value in a time interval |
 |12 | [2CH_EMG_PY_Controller](12_2CH_EMG_PY_Controller)| An EMG game Controller to play games using hand gestures using Arduino and Python |
 |13 | [2CH_EMG_HID_Controller](13_2CH_EMG_HID_Controller)| An EMG game Controller to play games using hand gestures using only Arduino R4 |
-
+|14 | [2CH_EMG_BioArm_Wrestling](14_2CH_EMG_BioArm_Wrestling) | A two-player EMG-powered arm wrestling game where players compete by controlling a servo claw using their muscle activity through a live web interface |
 
 
 Compatibility of various boards with different sensors
