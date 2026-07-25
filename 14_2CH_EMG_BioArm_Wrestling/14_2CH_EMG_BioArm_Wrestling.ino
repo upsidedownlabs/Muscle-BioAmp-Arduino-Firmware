@@ -36,10 +36,9 @@
 // Number of EMG samples acquired per second
 #define SAMPLE_RATE 500
 #define BAUD_RATE 115200
-
+  
 #define CHANNEL_1 A0  // Player 1 who has to close the servo claw
 #define CHANNEL_2 A1  // Player 2 who has to open the servo claw
-
 
 #define BUFFER_SIZE 64
 #define DEADZONE_DIFF 5.0f
