@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioArm Wrestling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0E0A1B;
+      --surface: #171029;
+      --border: #2B2347;
+      --text: #EDE9F7;
+      --text-muted: #9089AD;
+      --primary: #9F75F5;
+      --primary-dark: #8358E8;
+      --primary-soft: #241B44;
+      --p1: #2FD897;
+      --p1-soft: #113325;
+      --p2: #9F75F5;
+      --p2-soft: #241B44;
+      --danger: #FF6B70;  
+      --shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.35), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
+      --dot-color: rgba(159, 117, 245, 0.12);
+      --trace-grid: rgba(237, 233, 247, 0.08);
+      --canvas-grad-1: #1D1733;
+      --canvas-grad-2: #171029;
+      --overlay-scrim: rgba(0, 0, 0, 0.55);
+
+      color-scheme: dark;
+    }
+
+    html[data-theme="light"] {
+      --bg: #F7F5FC;
+      --surface: #FFFFFF;
+      --border: #E7E1F5;
+      --text: #1C1533;
+      --text-muted: #7C7593;
+      --primary: #6D28D9;
+      --primary-dark: #4C1D95;
+      --primary-soft: #F0E9FD;
+      --p1: #0FA36B;
+      --p1-soft: #E3F7EE;
+      --p2: #6D28D9;
+      --p2-soft: #F0E9FD;
+      --danger: #E5484D;
+      --shadow: 0 0.0625rem 0.125rem rgba(28, 21, 51, 0.04), 0 0.5rem 1.5rem rgba(28, 21, 51, 0.06);
+      --dot-color: rgba(109, 40, 217, 0.08);
+      --trace-grid: rgba(28, 21, 51, 0.06);
+      --canvas-grad-1: #FBFAFE;
+      --canvas-grad-2: #F5F2FC;
+      --overlay-scrim: rgba(28, 21, 51, 0.35);
+
+      color-scheme: light;
+    }
+
+    body,
+    .panel,
+    .status-pill,
+    button,
+    canvas.trace,
+    .gauge-col,
+    .strength-track,
+    .theme-toggle-track,
+    .theme-toggle-thumb,
+    .overlay,
+    .win-card {
+      transition: background-color .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 0.0625rem 0.0625rem, var(--dot-color) 0.0625rem, transparent 0) 0 0/1.75rem 1.75rem,
+        var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.25rem 3.75rem;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.75rem, 4.6vw, 2.75rem);
+      letter-spacing: -0.01em;
+      margin-top: 0.375rem;
+      color: var(--text);
+    }
+
+    h1 span {
+      color: var(--primary);
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 68.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin: 1.625rem 0 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-cluster {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.5rem 0.875rem;
+      border-radius: 62.4375rem;
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .dot {
+      width: 0.4375rem;
+      height: 0.4375rem;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: .2s;
+    }
+
+    .status-pill.live .dot {
+      background: var(--p1);
+      box-shadow: 0 0 0 0.25rem var(--p1-soft);
+    }
+
+    .status-pill.live {
+      color: var(--p1);
+      border-color: var(--p1-soft);
+    }
+
+    button {
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      color: var(--text);
+      padding: 0.6875rem 1.25rem;
+      border-radius: 0.625rem;
+      cursor: pointer;
+      transition: .15s;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0.0625rem);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+      color: #fff;
+      border-color: var(--primary-dark);
+    }
+
+    button.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .arena {
+      width: 100%;
+      max-width: 68.75rem;
+      display: grid;
+      grid-template-columns: 1fr 13.75rem 1fr;
+      gap: 1.125rem;
+      align-items: stretch;
+    }
+
+    @media (max-width:51.25rem) {
+      .arena {
+        grid-template-columns: 1fr;
+      }
+
+      .gauge-col {
+        order: 2;
+      }
+
+      .panel.p2 {
+        order: 3;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      border-radius: 1.125rem;
+      padding: 1.375rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.p1 {
+      border-top: 0.1875rem solid var(--p1);
+    }
+
+    .panel.p2 {
+      border-top: 0.1875rem solid var(--p2);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chan-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.5625rem;
+      border-radius: 62.4375rem;
+    }
+
+    .p1 .chan-label {
+      color: var(--p1);
+      background: var(--p1-soft);
+    }
+
+    .p2 .chan-label {
+      color: var(--p2);
+      background: var(--p2-soft);
+    }
+
+    input.name {
+      background: transparent;
+      border: none;
+      border-bottom: 0.125rem solid var(--border);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.4375rem;
+      padding: 0.25rem 0.125rem 0.5rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .p1 input.name:focus {
+      border-color: var(--p1);
+    }
+
+    .p2 input.name:focus {
+      border-color: var(--p2);
+    }
+
+    canvas.trace {
+      width: 100%;
+      height: 6.875rem;
+      border-radius: 0.625rem;
+      background: linear-gradient(180deg, var(--canvas-grad-1), var(--canvas-grad-2));
+      display: block;
+      border: 0.0625rem solid var(--border);
+    }
+
+    .strength-row {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .strength-track {
+      flex: 1;
+      height: 0.5625rem;
+      border-radius: 0.375rem;
+      background: var(--bg);
+      overflow: hidden;
+      border: 0.0625rem solid var(--border);
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: width .06s linear;
+    }
+
+    .p1 .strength-fill {
+      background: var(--p1);
+    }
+
+    .p2 .strength-fill {
+      background: var(--p2);
+    }
+
+    .strength-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      width: 2.75rem;
+      text-align: right;
+    }
+
+    .gauge-col {
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      border-radius: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.75rem 0.625rem;
+      gap: 1.125rem;
+      box-shadow: var(--shadow);
+    }
+
+    .vs {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 0.25rem 0.875rem;
+      border-radius: 62.4375rem;
+    }
+
+    .cal-readout {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      min-height: 1rem;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 68.75rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.625rem;
+    }
+
+    .log {
+      width: 100%;
+      max-width: 68.75rem;
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--overlay-scrim);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(0.375rem);
+      z-index: 20;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .win-card {
+      text-align: center;
+      padding: 2.5rem 3.75rem;
+      border-radius: 1.375rem;
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      box-shadow: 0 1.25rem 3.75rem rgba(28, 21, 51, 0.18);
+    }
+
+    .win-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.3em;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .win-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.375rem, 6.5vw, 4rem);
+      margin: 0.625rem 0 1.5rem;
+    }
+
+    .win-name.p1 {
+      color: var(--p1);
+    }
+
+    .win-name.p2 {
+      color: var(--p2);
+    }
+
+    .muscle-icon {
+      flex-shrink: 0;
+    }
+
+    .p1 .chan-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .p2 .chan-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    @keyframes flex-pulse {
+
+      0%,
+      100% {
+        box-shadow: var(--shadow);
+      }
+
+      50% {
+        box-shadow: 0 0 0 0.1875rem var(--glow-color, var(--primary-soft)), var(--shadow);
+      }
+    }
+
+    .panel.flexing {
+      animation: flex-pulse 0.6s ease-in-out infinite;
+    }
+
+    .panel.p1.flexing {
+      --glow-color: var(--p1-soft);
+      border-top-color: var(--p1);
+    }
+
+    .panel.p2.flexing {
+      --glow-color: var(--p2-soft);
+      border-top-color: var(--p2);
+    }
+
+    .bicep-mini {
+      transition: transform .08s ease-out;
+      transform-origin: center;
+    }
+
+    .fiber-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .clash-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.125rem;
+    }
+
+    .clash-badge svg {
+      width: 2.125rem;
+      height: 1.375rem;
+    }
+
+    .muscle-meter {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .panel.p2 .muscle-meter {
+      flex-direction: row-reverse;
+    }
+
+    .muscle-svg {
+      width: 15.625rem;
+      height: 15.625rem;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .muscle-outline {
+      fill: var(--bg);
+      stroke: var(--border);
+      stroke-width: 1.5;
+    }
+
+    .panel.p1 .muscle-outline {
+      stroke: var(--p1);
+    }
+
+    .panel.p2 .muscle-outline {
+      stroke: var(--p2);
+    }
+
+    .muscle-clip-rect {
+      transition: y .12s linear, height .12s linear;
+    }
+
+    .muscle-detail {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .8;
+    }
+
+    .panel.p1 .muscle-detail {
+      stroke: var(--p1);
+      opacity: .55;
+    }
+
+    .panel.p2 .muscle-detail {
+      stroke: var(--p2);
+      opacity: .55;
+    }
+
+    .panel.p1 .muscle-fill {
+      fill: var(--p1);
+    }
+
+    .panel.p2 .muscle-fill {
+      fill: var(--p2);
+    }
+
+    .muscle-readout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .panel.p2 .muscle-readout {
+      align-items: flex-end;
+    }
+
+    .muscle-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .muscle-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1875rem;
+      transition: color .2s ease;
+    }
+
+    .panel.p1 .muscle-pct {
+      color: var(--p1);
+    }
+
+    .panel.p2 .muscle-pct {
+      color: var(--p2);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      cursor: pointer;
+      align-self: center;
+    }
+
+    .theme-toggle:hover {
+      border-color: transparent;
+      color: inherit;
+    }
+
+    .theme-toggle-track {
+      position: relative;
+      width: 3.5rem;
+      height: 1.875rem;
+      background: var(--surface);
+      border: 0.0625rem solid var(--border);
+      border-radius: 62.4375rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.4375rem;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle-track svg {
+      width: 0.8125rem;
+      height: 0.8125rem;
+      position: relative;
+      z-index: 1;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .theme-toggle-thumb {
+      position: absolute;
+      top: 0.1875rem;
+      left: 0.1875rem;
+      width: 1.375rem;
+      height: 1.375rem;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.35);
+      transform: translateX(0);
+      transition: transform .25s cubic-bezier(.4, 0, .2, 1), background-color .25s ease;
+    }
+
+    html[data-theme="light"] .theme-toggle-thumb {
+      transform: translateX(1.625rem);
+      background: #F5A623;
+    }
+
+    .udl-logo {
+      position: fixed;
+      top: 1.25rem;
+      left: 1.25rem;
+      height: 3.125rem;
+      width: auto;
+      z-index: 15;
+    }
+
+    @media (max-width:51.25rem) {
+      .udl-logo {
+        top: 0.875rem;
+        left: 0.875rem;
+        height: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <img id="udlLogo" class="udl-logo" src="udl_logo_white.svg" alt="Upside Down Labs">
+  <div class="eyebrow">Upside&nbsp;Down&nbsp;Labs&nbsp;·&nbsp;Muscle&nbsp;BioAmp&nbsp;Patchy</div>
+  <h1>BioArm <span>Wrestling</span></h1>
+
+  <div class="topbar">
+    <div class="status-cluster">
+      <div class="status-pill" id="connPill"><span class="dot"></span><span id="connText">Not connected</span></div>
+      <div class="status-pill" id="statePill"><span class="dot"></span><span id="stateText">Idle</span></div>
+    </div>
+    <div style="display:flex;gap:0.625rem;align-items:center;">
+      <button id="connectBtn" class="primary">Connect to Arduino</button>
+      <button id="disconnectBtn" disabled>Disconnect</button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+        <span class="theme-toggle-track">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4.5" />
+            <path
+              d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8" />
+          </svg>
+          <span class="theme-toggle-thumb"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="arena">
+    <div class="panel p1">
+      <div class="panel-head">
+        <span class="chan-label">
+          <svg class="muscle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0FA36B"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+            <path d="M15 14a5 5 0 0 0-7.584 2" />
+            <path d="M9.964 6.825C8.019 7.977 9.5 13 8 15" />
+          </svg>
+          CH.1 · A0 · CLOSE THE CLAW
+        </span>
+      </div>
+      <input class="name" id="p1Name" value="Player 1" maxlength="16">
+      <canvas class="trace" id="p1Canvas"></canvas>
+      <div class="muscle-meter">
+        <svg class="muscle-svg" viewBox="-2 -2 28 28" aria-hidden="true">
+          <defs>
+            <clipPath id="p1MuscleClip">
+              <rect id="p1MuscleClipRect" class="muscle-clip-rect" x="-2" y="26" width="28" height="0" />
+            </clipPath>
+          </defs>
+          <path class="muscle-outline"
+            d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+          <g clip-path="url(#p1MuscleClip)">
+            <path class="muscle-fill"
+              d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+          </g>
+          <path class="muscle-detail" d="M15 14a5 5 0 0 0-7.584 2" />
+          <path class="muscle-detail" d="M9.964 6.825C8.019 7.977 9.5 13 8 15" />
+        </svg>
+        <div class="muscle-readout">
+          <span class="muscle-label">Win meter</span>
+          <span class="muscle-pct" id="p1MusclePct">0%</span>
+        </div>
+      </div>
+      <div class="strength-row">
+        <div class="strength-track">
+          <div class="strength-fill" id="p1Fill"></div>
+        </div>
+        <span class="strength-num" id="p1Num">0</span>
+      </div>
+    </div>
+
+    <div class="gauge-col">
+      <div class="clash-badge">
+        <svg viewBox="0 0 60 34" fill="none">
+          <path d="M6 20c4-2 8-2 11 1l4 4" stroke="#0FA36B" stroke-width="3.4" stroke-linecap="round" />
+          <path d="M54 20c-4-2-8-2-11 1l-4 4" stroke="#6D28D9" stroke-width="3.4" stroke-linecap="round" />
+          <circle cx="24" cy="27" r="4.5" fill="#0FA36B" />
+          <circle cx="36" cy="27" r="4.5" fill="#6D28D9" />
+          <path d="M27 12l3-5 3 5-3 3z" fill="#F5A623" />
+        </svg>
+        <span class="vs">VS</span>
+      </div>
+      <div class="cal-readout" id="calReadout">Connect the board to begin</div>
+    </div>
+
+    <div class="panel p2">
+      <div class="panel-head">
+        <span class="chan-label">
+          <svg class="muscle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6D28D9"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+            <path d="M15 14a5 5 0 0 0-7.584 2" />
+            <path d="M9.964 6.825C8.019 7.977 9.5 13 8 15" />
+          </svg>
+          CH.2 · A1 · OPEN THE CLAW
+        </span>
+      </div>
+      <input class="name" id="p2Name" value="Player 2" maxlength="16" style="text-align:right;">
+      <canvas class="trace" id="p2Canvas"></canvas>
+      <div class="muscle-meter">
+        <svg class="muscle-svg" viewBox="-2 -2 28 28" aria-hidden="true">
+          <defs>
+            <clipPath id="p2MuscleClip">
+              <rect id="p2MuscleClipRect" class="muscle-clip-rect" x="-2" y="26" width="28" height="0" />
+            </clipPath>
+          </defs>
+          <path class="muscle-outline"
+            d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+          <g clip-path="url(#p2MuscleClip)">
+            <path class="muscle-fill"
+              d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1" />
+          </g>
+          <path class="muscle-detail" d="M15 14a5 5 0 0 0-7.584 2" />
+          <path class="muscle-detail" d="M9.964 6.825C8.019 7.977 9.5 13 8 15" />
+        </svg>
+        <div class="muscle-readout">
+          <span class="muscle-label">Win meter</span>
+          <span class="muscle-pct" id="p2MusclePct">0%</span>
+        </div>
+      </div>
+      <div class="strength-row">
+        <span class="strength-num" id="p2Num">0</span>
+        <div class="strength-track">
+          <div class="strength-fill" id="p2Fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="startBtn" class="primary" disabled>Start Duel</button>
+    <button id="rematchBtn" disabled>Rematch</button>
+    <button id="newOppBtn" disabled>New Opponents</button>
+  </div>
+
+  <div class="log" id="logLine">Plug in the Uno R4 Minima, then click "Connect to Arduino".</div>
+
+  <div class="overlay" id="winOverlay">
+    <div class="win-card">
+      <div class="win-eyebrow">WINNER</div>
+      <div class="win-name" id="winName">—</div>
+      <div style="display:flex;gap:0.75rem;justify-content:center;">
+        <button class="primary" id="overlayRematch">Rematch</button>
+        <button id="overlayNewOpp">New Opponents</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const $ = id => document.getElementById(id);
+      const connectBtn = $('connectBtn'), disconnectBtn = $('disconnectBtn');
+      const connPill = $('connPill'), connText = $('connText');
+      const statePill = $('statePill'), stateText = $('stateText');
+      const startBtn = $('startBtn'), rematchBtn = $('rematchBtn'), newOppBtn = $('newOppBtn');
+      const calReadout = $('calReadout'), logLine = $('logLine');
+      const p1Fill = $('p1Fill'), p2Fill = $('p2Fill'), p1Num = $('p1Num'), p2Num = $('p2Num');
+      const winOverlay = $('winOverlay'), winName = $('winName');
+      const p1NameInput = $('p1Name'), p2NameInput = $('p2Name');
+
+      let port, reader, writer, keepReading = false;
+      let textDecoder, readableStreamClosed, textEncoder, writableStreamClosed;
+      let lineBuffer = '';
+      let gameState = 'idle';
+
+      let countdownInterval = null;
+
+      const MAX_STRENGTH = 150;
+
+      function cssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+      function makeTrace(canvasId, colorVar) {
+        const canvas = $(canvasId);
+        const ctx = canvas.getContext('2d');
+        let data = [];
+        function resize() {
+          const rect = canvas.getBoundingClientRect();
+          canvas.width = rect.width * devicePixelRatio;
+          canvas.height = rect.height * devicePixelRatio;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        function push(v) {
+          data.push(v);
+          if (data.length > 160) data.shift();
+          draw();
+        }
+        function draw() {
+          const w = canvas.width, h = canvas.height;
+          const color = cssVar(colorVar) || '#6D28D9';
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = cssVar('--trace-grid') || 'rgba(28,21,51,0.06)';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+          if (data.length < 2) return;
+
+          ctx.beginPath();
+          data.forEach((v, i) => {
+            const x = (i / (159)) * w;
+            const norm = Math.min(v / MAX_STRENGTH, 1);
+            const y = h - norm * h * 0.9 - 6;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          });
+          ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+          ctx.fillStyle = color + '1a';
+          ctx.fill();
+
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.4 * devicePixelRatio;
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          data.forEach((v, i) => {
+            const x = (i / (159)) * w;
+            const norm = Math.min(v / MAX_STRENGTH, 1);
+            const y = h - norm * h * 0.9 - 6;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+        }
+        function reset() { data = []; draw(); }
+        return { push, reset, redraw: draw };
+      }
+      const p1Trace = makeTrace('p1Canvas', '--p1');
+      const p2Trace = makeTrace('p2Canvas', '--p2');
+
+      const p1MuscleClipRect = $('p1MuscleClipRect');
+      const p2MuscleClipRect = $('p2MuscleClipRect');
+      const p1MusclePct = $('p1MusclePct');
+      const p2MusclePct = $('p2MusclePct');
+      const MUSCLE_VIEWBOX_TOP = -2;
+      const MUSCLE_VIEWBOX_BOTTOM = 26;
+      const MUSCLE_VIEWBOX_H = MUSCLE_VIEWBOX_BOTTOM - MUSCLE_VIEWBOX_TOP;
+      const ANGLE_START = 50;
+      const ANGLE_P1_WIN = 90;
+      const ANGLE_P2_WIN = 10;
+      function setMuscleFill(clipRect, pctEl, pct) {
+        const clamped = Math.max(0, Math.min(100, pct));
+        const filledHeight = (clamped / 100) * MUSCLE_VIEWBOX_H;
+        clipRect.setAttribute('y', MUSCLE_VIEWBOX_BOTTOM - filledHeight);
+        clipRect.setAttribute('height', filledHeight);
+        pctEl.textContent = Math.round(clamped) + '%';
+      }
+      function resetMuscles() {
+        setMuscleFill(p1MuscleClipRect, p1MusclePct, 50);
+        setMuscleFill(p2MuscleClipRect, p2MusclePct, 50);
+      }
+      resetMuscles();
+
+      function setConnected(isConn) {
+        connectBtn.disabled = isConn;
+        disconnectBtn.disabled = !isConn;
+        startBtn.disabled = !isConn;
+        connPill.classList.toggle('live', isConn);
+        connText.textContent = isConn ? 'Connected' : 'Not connected';
+      }
+      function setGameState(s) {
+        gameState = s;
+        statePill.classList.toggle('live', s === 'playing');
+        rematchBtn.disabled = s === 'idle';
+        newOppBtn.disabled = s === 'idle';
+        startBtn.disabled = (s !== 'idle');
+      }
+
+      function log(msg) { logLine.textContent = msg; }
+
+      async function connect() {
+        try {
+          if (!port) {
+            const ports = await navigator.serial.getPorts();
+            if (ports.length) {
+              port = ports[0];
+            } else {
+              port = await navigator.serial.requestPort();
+            }
+          }
+
+          await openPort();
+        } catch (e) {
+          log("Connection failed: " + e.message);
+        }
+      }
+      async function openPort() {
+        await port.open({ baudRate: 115200 });
+
+        textDecoder = new TextDecoderStream();
+        readableStreamClosed = port.readable.pipeTo(textDecoder.writable).catch(() => { });
+        reader = textDecoder.readable.getReader();
+
+        textEncoder = new TextEncoderStream();
+        writableStreamClosed = textEncoder.readable.pipeTo(port.writable).catch(() => { });
+        writer = textEncoder.writable.getWriter();
+
+        keepReading = true;
+        lineBuffer = '';
+        setConnected(true);
+        log('Connected. Waiting for board to say READY…');
+        readLoop();
+      }
+      async function readLoop() {
+        try {
+          while (keepReading) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            if (value) {
+              lineBuffer += value;
+              let idx;
+              while ((idx = lineBuffer.indexOf('\n')) >= 0) {
+                const line = lineBuffer.slice(0, idx).trim();
+                lineBuffer = lineBuffer.slice(idx + 1);
+                if (line) handleLine(line);
+              }
+            }
+          }
+        } catch (e) {
+          if (keepReading) handleDeviceLost();
+        }
+      }
+      async function disconnect() {
+        cancelCountdown();
+        keepReading = false;
+        try {
+          if (reader) {
+            await reader.cancel();
+            reader.releaseLock();
+          }
+        } catch (e) { }
+        try {
+          if (readableStreamClosed) await readableStreamClosed;
+        } catch (e) { }
+        try {
+          if (writer) {
+            await writer.close();
+            writer.releaseLock();
+          }
+        } catch (e) { }
+        try {
+          if (writableStreamClosed) await writableStreamClosed;
+        } catch (e) { }
+        try {
+          if (port) {
+            await port.close();
+          }
+        } catch (e) { }
+
+        reader = null;
+        writer = null;
+        textDecoder = null;
+        textEncoder = null;
+        readableStreamClosed = null;
+        writableStreamClosed = null;
+        port = null;
+
+        setConnected(false);
+        setGameState('idle');
+        log('Disconnected.');
+      }
+      function handleDeviceLost() {
+        cancelCountdown();
+        keepReading = false;
+        reader = null; writer = null;
+        textDecoder = null; textEncoder = null;
+        readableStreamClosed = null; writableStreamClosed = null;
+        setConnected(false);
+        setGameState('idle');
+        p1Trace.reset(); p2Trace.reset();
+        p1Fill.style.width = '0%'; p2Fill.style.width = '0%';
+        p1Panel.classList.remove('flexing'); p2Panel.classList.remove('flexing');
+        p1Icon.style.transform = 'scale(1)'; p2Icon.style.transform = 'scale(1)';
+        resetMuscles();
+        winOverlay.classList.remove('show');
+        log('Board disconnected — plug it back in to reconnect automatically.');
+      }
+
+      function cancelCountdown() {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+      }
+
+      function runCountdown(cmd) {
+        cancelCountdown();
+        startBtn.disabled = true;
+        rematchBtn.disabled = true;
+        newOppBtn.disabled = true;
+        let n = 3;
+        calReadout.textContent = `Get ready… ${n}`;
+        countdownInterval = setInterval(() => {
+          n--;
+          if (n > 0) {
+            calReadout.textContent = `Get ready… ${n}`;
+          } else {
+            cancelCountdown();
+            calReadout.textContent = 'Go!';
+            sendCmd(cmd);
+          }
+        }, 1000);
+      }
+
+      async function sendCmd(cmd) {
+        if (!writer) return;
+        try { await writer.write(cmd + '\n'); } catch (e) { handleDeviceLost(); }
+      }
+
+      async function tryAutoReconnect() {
+        if (!('serial' in navigator)) return;
+        const ports = await navigator.serial.getPorts();
+        if (ports.length) {
+          port = ports[0];
+          try { await openPort(); } catch (e) { }
+        }
+      }
+
+      if ('serial' in navigator) {
+        navigator.serial.addEventListener('disconnect', (event) => {
+          if (event.target === port) handleDeviceLost();
+        });
+        navigator.serial.addEventListener('connect', async (event) => {
+          if (!keepReading) {
+            port = event.target;
+            try { await openPort(); } catch (e) { }
+          }
+        });
+      }
+
+      function handleLine(line) {
+        const parts = line.split(',');
+        switch (parts[0]) {
+          case 'READY':
+            log('Board is ready. Enter names and click Start Duel.');
+            break;
+          case 'STARTED':
+            setGameState('playing');
+            calReadout.textContent = 'Squeeze to build your win meter!';
+            p1Trace.reset(); p2Trace.reset();
+            resetMuscles();
+            break;
+          case 'EMG': {
+            const a1 = parseFloat(parts[1]), a2 = parseFloat(parts[2]), angle = parseFloat(parts[3]);
+            updateTelemetry(a1, a2, angle);
+            break;
+          }
+          case 'WIN': {
+            const who = parts[1];
+            // Resolve the same fallback name for both the overlay title and
+            // the status readout so an empty name field doesn't leave the
+            // status line reading " wins the round".
+            const resolvedName = (who === '1' ? p1NameInput.value : p2NameInput.value) || (who === '1' ? 'Player 1' : 'Player 2');
+            winName.textContent = resolvedName;
+            winName.className = 'win-name ' + (who === '1' ? 'p1' : 'p2');
+            winOverlay.classList.add('show');
+            setGameState('gameover');
+            calReadout.textContent = `${resolvedName} wins the round`;
+            break;
+          }
+        }
+      }
+
+      const p1Panel = document.querySelector('.panel.p1');
+      const p2Panel = document.querySelector('.panel.p2');
+      const p1Icon = document.querySelector('.panel.p1 .muscle-icon');
+      const p2Icon = document.querySelector('.panel.p2 .muscle-icon');
+      const FLEX_THRESHOLD = 55;
+
+      function updateTelemetry(a1, a2, angle) {
+        p1Trace.push(a1); p2Trace.push(a2);
+        const p1pct = Math.min(100, (a1 / MAX_STRENGTH) * 100);
+        const p2pct = Math.min(100, (a2 / MAX_STRENGTH) * 100);
+        p1Fill.style.width = p1pct + '%';
+        p2Fill.style.width = p2pct + '%';
+        p1Num.textContent = Math.round(a1);
+        p2Num.textContent = Math.round(a2);
+
+        p1Panel.classList.toggle('flexing', p1pct >= FLEX_THRESHOLD);
+        p2Panel.classList.toggle('flexing', p2pct >= FLEX_THRESHOLD);
+        p1Icon.style.transform = `scale(${1 + (p1pct / 100) * 0.6})`;
+        p2Icon.style.transform = `scale(${1 + (p2pct / 100) * 0.6})`;
+
+        let p1Pct, p2Pct;
+        if (angle >= ANGLE_START) {
+          p1Pct = 50 + 50 * (angle - ANGLE_START) / (ANGLE_P1_WIN - ANGLE_START);
+          p2Pct = 100 - p1Pct;
+        } else {
+          p2Pct = 50 + 50 * (ANGLE_START - angle) / (ANGLE_START - ANGLE_P2_WIN);
+          p1Pct = 100 - p2Pct;
+        }
+        setMuscleFill(p1MuscleClipRect, p1MusclePct, p1Pct);
+        setMuscleFill(p2MuscleClipRect, p2MusclePct, p2Pct);
+      }
+
+      connectBtn.addEventListener('click', connect);
+      disconnectBtn.addEventListener('click', disconnect);
+      startBtn.addEventListener('click', () => { winOverlay.classList.remove('show'); runCountdown('START'); });
+      rematchBtn.addEventListener('click', () => { winOverlay.classList.remove('show'); runCountdown('REMATCH'); });
+      $('overlayRematch').addEventListener('click', () => rematchBtn.click());
+      newOppBtn.addEventListener('click', () => {
+        cancelCountdown();
+        p1NameInput.value = '';
+        p2NameInput.value = '';
+        p1NameInput.focus();
+        p1Trace.reset(); p2Trace.reset();
+        p1Fill.style.width = '0%'; p2Fill.style.width = '0%';
+        p1Num.textContent = '0'; p2Num.textContent = '0';
+        p1Panel.classList.remove('flexing'); p2Panel.classList.remove('flexing');
+        p1Icon.style.transform = 'scale(1)'; p2Icon.style.transform = 'scale(1)';
+        resetMuscles();
+        setGameState('idle');
+        calReadout.textContent = 'Enter names and click Start Duel';
+        winOverlay.classList.remove('show');
+        log('New opponents — enter names, then Start Duel.');
+      });
+      $('overlayNewOpp').addEventListener('click', () => newOppBtn.click());
+
+      if (!('serial' in navigator)) {
+        log('This browser does not support Web Serial. Use desktop Chrome or Edge.');
+        connectBtn.disabled = true;
+      } else {
+        tryAutoReconnect();
+      }
+
+      const themeToggle = $('themeToggle');
+      const udlLogo = $('udlLogo');
+      let theme = 'dark';
+      function applyTheme(next) {
+        theme = next;
+        if (theme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+        themeToggle.setAttribute('aria-pressed', String(theme === 'light'));
+        udlLogo.src = theme === 'light' ? 'udl_logo_black.svg' : 'udl_logo_white.svg';
+        p1Trace.redraw();
+        p2Trace.redraw();
+      }
+      themeToggle.addEventListener('click', () => {
+        applyTheme(theme === 'dark' ? 'light' : 'dark');
+      });
+      applyTheme('dark');
+    })();
+  </script>
+</body>
+
+</html>
