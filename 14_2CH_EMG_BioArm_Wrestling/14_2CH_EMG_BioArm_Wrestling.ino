@@ -198,7 +198,7 @@ void startGame() {
   active1 = active2 = 0.0f;
   diff = 0.0f;
   lastServo = 0;
-  samplePast = 0;
+  samplePast = micros();
   sampleTimer = 0;
 
   state = ST_PLAYING;
@@ -290,7 +290,7 @@ void loop() {
     strength1 = 0.9f * strength1 + 0.1f * active1;
     strength2 = 0.9f * strength2 + 0.1f * active2;
 
-    diff = active1 - active2;
+    diff = strength1 - strength2;
     diff = constrain(diff, -10.0f, 10.0f);
     if (fabsf(diff) < DEADZONE_DIFF) diff = 0.0f;
 

@@ -24,7 +24,7 @@
       --p1-soft: #113325;
       --p2: #9F75F5;
       --p2-soft: #241B44;
-      --danger: #FF6B70;  
+      --danger: #FF6B70;
       --shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.35), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
       --dot-color: rgba(159, 117, 245, 0.12);
       --trace-grid: rgba(237, 233, 247, 0.08);
@@ -701,8 +701,7 @@
         <span class="theme-toggle-track">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
             stroke-linejoin="round">
-            <path
-              d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
           </svg>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
             stroke-linejoin="round">
@@ -891,7 +890,8 @@
           ctx.beginPath();
           data.forEach((v, i) => {
             const x = (i / (159)) * w;
-            const norm = Math.min(v / MAX_STRENGTH, 1);
+            const maxValue = Math.max(...data, 1);   // avoid divide by zero
+            const norm = v / maxValue;
             const y = h - norm * h * 0.9 - 6;
             i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
           });
@@ -905,7 +905,8 @@
           ctx.beginPath();
           data.forEach((v, i) => {
             const x = (i / (159)) * w;
-            const norm = Math.min(v / MAX_STRENGTH, 1);
+            const maxValue = Math.max(...data, 1);   // avoid divide by zero
+            const norm = v / maxValue;
             const y = h - norm * h * 0.9 - 6;
             i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
           });
