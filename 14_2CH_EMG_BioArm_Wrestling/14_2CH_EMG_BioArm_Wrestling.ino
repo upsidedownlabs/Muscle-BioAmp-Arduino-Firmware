@@ -246,7 +246,7 @@ void sendTelemetry() {
 
 void setup() {
   Serial.begin(BAUD_RATE);
-  delay(10);
+  delay(2000);
 
   servo.attach(SERVO_PIN);
   servo.write(SERVO_START);
@@ -254,7 +254,11 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("READY");
+  if (!Serial) {
+    startGame();
+  } else {
+    Serial.println("READY");
+  }
 }
 
 void loop() {
