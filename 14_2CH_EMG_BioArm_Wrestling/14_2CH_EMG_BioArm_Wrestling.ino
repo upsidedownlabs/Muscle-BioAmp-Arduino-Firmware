@@ -197,7 +197,7 @@ void startGame() {
   active1 = active2 = 0.0f;
   diff = 0.0f;
   lastServo = 0;
-  samplePast = 0;
+  samplePast = micros();
   sampleTimer = 0;
 
   state = ST_PLAYING;
