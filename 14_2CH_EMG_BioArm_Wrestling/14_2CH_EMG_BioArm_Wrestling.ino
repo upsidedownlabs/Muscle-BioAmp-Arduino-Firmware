@@ -48,7 +48,7 @@
 #define SERVO_MIN 40.0f
 #define SERVO_MAX 180.0f
 #define SERVO_START 109.0f
-#define ANGLE_SENSITIVITY 0.03f
+#define ANGLE_SENSITIVITY 0.05f
 #define LED_PIN LED_BUILTIN
 
 // Servo control global variables
