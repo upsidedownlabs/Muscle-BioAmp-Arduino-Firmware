@@ -45,16 +45,15 @@
 
 // Servo control macros
 #define SERVO_PIN 2
-#define SERVO_OPEN 10.0f
-#define SERVO_CLOSE 90.0f
-#define SERVO_MIN 10.0f
-#define SERVO_MAX 90.0f
+#define SERVO_MIN 40.0f
+#define SERVO_MAX 180.0f
+#define SERVO_START 109.0f
 #define ANGLE_SENSITIVITY 0.03f
 #define LED_PIN LED_BUILTIN
 
 // Servo control global variables
 Servo servo;
-float armAngle = 50.0f;
+float armAngle = SERVO_START;
 uint32_t lastServo = 0;
 uint32_t lastTelemetry = 0;
 
@@ -191,8 +190,8 @@ void startGame() {
 
   player1.reset();
   player2.reset();
-  armAngle = 50.0f;
-  servo.write(50);
+  armAngle = SERVO_START;
+  servo.write(armAngle);
 
   strength1 = strength2 = 0.0f;
   active1 = active2 = 0.0f;
@@ -211,7 +210,7 @@ void updateServo() {
     lastServo = millis();
 
     armAngle += diff * ANGLE_SENSITIVITY;
-    armAngle = constrain(armAngle, SERVO_OPEN, SERVO_CLOSE);
+    armAngle = constrain(armAngle, SERVO_MIN, SERVO_MAX);
 
     servo.write(armAngle);
 
@@ -247,11 +246,10 @@ void sendTelemetry() {
 
 void setup() {
   Serial.begin(BAUD_RATE);
-  while (!Serial)
-    delay(10);
+  delay(10);
 
   servo.attach(SERVO_PIN);
-  servo.write(50);
+  servo.write(SERVO_START);
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
