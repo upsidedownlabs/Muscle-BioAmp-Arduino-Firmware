@@ -218,16 +218,30 @@ void updateServo() {
   }
 }
 
+// Moves to the losing end and back to the winning end in one second
+void playWinFeedback(float winningEnd) {
+  float losingEnd = (winningEnd == SERVO_MAX) ? SERVO_MIN : SERVO_MAX;
+  servo.write(losingEnd);
+  delay(500);
+  servo.write(winningEnd);
+  delay(500);
+  armAngle = winningEnd;
+}
+
 // Detects the winner when the servo reaches either end position
 void checkGameOver() {
   if (armAngle <= SERVO_MIN) {
     servo.write(SERVO_MIN);
     state = ST_GAMEOVER;
     Serial.println("WIN,2");
+    delay(1000);
+    playWinFeedback(SERVO_MIN);
   } else if (armAngle >= SERVO_MAX) {
     servo.write(SERVO_MAX);
     state = ST_GAMEOVER;
     Serial.println("WIN,1");
+    delay(1000);
+    playWinFeedback(SERVO_MAX);
   }
 }
 
