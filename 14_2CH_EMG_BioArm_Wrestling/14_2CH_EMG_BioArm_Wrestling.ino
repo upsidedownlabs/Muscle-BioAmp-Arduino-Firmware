@@ -77,7 +77,7 @@ GameState state = ST_IDLE;
 constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
 
-void sendTelemetry();
+void sendTelemetry(bool force = false);
 
 // Class for EMG signal processing and envelope detection
 class EMGChannel {
@@ -220,17 +220,28 @@ void updateServo() {
   }
 }
 
+// Moves the servo smoothly between two angles in the given time
+void moveServoSmooth(float startAngle, float endAngle, unsigned long duration) {
+  unsigned long moveStarted = millis();
+
+  while (millis() - moveStarted < duration) {
+    float progress = (millis() - moveStarted) / (float)duration;
+    armAngle = startAngle + (endAngle - startAngle) * progress;
+    servo.write(armAngle);
+    sendTelemetry();
+    delay(10);
+  }
+
+  armAngle = endAngle;
+  servo.write(armAngle);
+  sendTelemetry(true);
+}
+
 // Moves to the losing end and back to the winning end in one second
 void playWinFeedback(float winningEnd) {
   float losingEnd = (winningEnd == SERVO_MAX) ? SERVO_MIN : SERVO_MAX;
-  armAngle = losingEnd;
-  servo.write(armAngle);
-  sendTelemetry();
-  delay(500);
-  armAngle = winningEnd;
-  servo.write(armAngle);
-  sendTelemetry();
-  delay(500);
+  moveServoSmooth(winningEnd, losingEnd, 500);
+  moveServoSmooth(losingEnd, winningEnd, 500);
 }
 
 // Detects the winner when the servo reaches either end position
@@ -251,8 +262,8 @@ void checkGameOver() {
 }
 
 // Transmits player EMG activity and servo position to the web interface at 50 Hz
-void sendTelemetry() {
-  if (millis() - lastTelemetry >= 20) {
+void sendTelemetry(bool force) {
+  if (force || millis() - lastTelemetry >= 20) {
     lastTelemetry = millis();
     Serial.print("EMG,");
     Serial.print(active1);

@@ -68,8 +68,7 @@
     .strength-track,
     .theme-toggle-track,
     .theme-toggle-thumb,
-    .overlay,
-    .win-card {
+    .overlay {
       transition: background-color .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease;
     }
 
@@ -94,7 +93,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1.25rem 3.75rem;
+      padding: 1rem 1.25rem;
+      overflow: hidden;
     }
 
     .eyebrow {
@@ -121,11 +121,10 @@
 
     .topbar {
       width: 100%;
-      max-width: 68.75rem;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin: 1.625rem 0 1.5rem;
+      margin: 0.75rem 0;
       gap: 1rem;
       flex-wrap: wrap;
     }
@@ -217,15 +216,21 @@
 
     .arena {
       width: 100%;
-      max-width: 68.75rem;
+      flex: 1;
+      min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 26rem minmax(0, 1fr);
+      grid-template-columns: minmax(17rem, 22rem) minmax(36rem, 1fr) minmax(17rem, 22rem);
       gap: 1.125rem;
-      align-items: stretch;
+      align-items: center;
     }
 
-    @media (max-width:51.25rem) {
+    @media (max-width:75rem) {
+      body {
+        overflow-y: auto;
+      }
+
       .arena {
+        flex: none;
         grid-template-columns: 1fr;
       }
 
@@ -248,6 +253,7 @@
       gap: 0.875rem;
       position: relative;
       box-shadow: var(--shadow);
+      width: 100%;
     }
 
     .panel.p1 {
@@ -358,9 +364,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 1.75rem 0.625rem;
-      gap: 1.125rem;
+      padding: 0.75rem 0.625rem;
+      gap: 0.5rem;
       box-shadow: var(--shadow);
+      width: 100%;
     }
 
     .vs {
@@ -384,18 +391,16 @@
 
     .controls {
       width: 100%;
-      max-width: 68.75rem;
       display: flex;
       gap: 0.75rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 1.625rem;
+      margin-top: 0.75rem;
     }
 
     .log {
       width: 100%;
-      max-width: 68.75rem;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6875rem;
       color: var(--text-muted);
@@ -425,6 +430,16 @@
       background: var(--surface);
       border: 0.0625rem solid var(--border);
       box-shadow: 0 1.25rem 3.75rem rgba(28, 21, 51, 0.18);
+    }
+
+    .win-card.p1 {
+      border-color: var(--p1);
+      box-shadow: 0 0 0.75rem rgba(47, 216, 151, 0.8), 0 0 2.5rem rgba(47, 216, 151, 0.55);
+    }
+
+    .win-card.p2 {
+      border-color: var(--p2);
+      box-shadow: 0 0 0.75rem rgba(159, 117, 245, 0.8), 0 0 2.5rem rgba(159, 117, 245, 0.55);
     }
 
     .win-eyebrow {
@@ -518,13 +533,14 @@
     .servo-meter {
       position: relative;
       width: 100%;
-      max-width: 26rem;
-      aspect-ratio: 1492 / 2000;
+      max-width: min(60rem, 85vh);
+      aspect-ratio: 1492 / 840;
+      overflow: hidden;
     }
 
     .servo-meter-layer {
       position: absolute;
-      top: 0;
+      top: -57.143%;
       left: 0;
       width: 100%;
       height: auto;
@@ -532,7 +548,10 @@
     }
 
     .servo-meter-needle {
-      filter: drop-shadow(0 0.125rem 0.125rem rgba(0, 0, 0, 0.55));
+      filter:
+        drop-shadow(0 0.125rem 0.125rem rgba(0, 0, 0, 0.7))
+        drop-shadow(0 0 0.35rem rgba(255, 255, 255, 0.95))
+        drop-shadow(0 0 0.8rem rgba(255, 179, 0, 0.9));
     }
 
     .theme-toggle {
@@ -721,7 +740,7 @@
   <div class="log" id="logLine">Plug in the Uno R4 Minima, then click "Connect to Arduino".</div>
 
   <div class="overlay" id="winOverlay">
-    <div class="win-card">
+    <div class="win-card" id="winCard">
       <div class="win-eyebrow">WINNER</div>
       <div class="win-name" id="winName">—</div>
       <div style="display:flex;gap:0.75rem;justify-content:center;">
@@ -740,7 +759,7 @@
       const startBtn = $('startBtn'), rematchBtn = $('rematchBtn'), newOppBtn = $('newOppBtn');
       const calReadout = $('calReadout'), logLine = $('logLine');
       const p1Fill = $('p1Fill'), p2Fill = $('p2Fill'), p1Num = $('p1Num'), p2Num = $('p2Num');
-      const winOverlay = $('winOverlay'), winName = $('winName');
+      const winOverlay = $('winOverlay'), winCard = $('winCard'), winName = $('winName');
       const p1NameInput = $('p1Name'), p2NameInput = $('p2Name');
 
       let port, reader, writer, keepReading = false;
@@ -749,6 +768,10 @@
       let gameState = 'idle';
 
       let countdownInterval = null;
+      let winOverlayTimeout = null;
+      let winFeedbackTimeout = null;
+      let meterAnimationFrame = null;
+      let meterFeedbackActive = false;
 
       const MAX_STRENGTH = 150;
 
@@ -816,6 +839,36 @@
       function setMeterAngle(angle) {
         const clamped = Math.max(ANGLE_MIN, Math.min(ANGLE_MAX, angle));
         servoNeedle.setAttribute('transform', `rotate(${clamped - ANGLE_START} 746 1190)`);
+      }
+
+      function playVirtualWinFeedback(winningEnd) {
+        const losingEnd = winningEnd === ANGLE_MAX ? ANGLE_MIN : ANGLE_MAX;
+        meterFeedbackActive = true;
+        setMeterAngle(winningEnd);
+
+        winFeedbackTimeout = setTimeout(() => {
+          winFeedbackTimeout = null;
+          const animationStarted = performance.now();
+
+          function animate(now) {
+            const elapsed = Math.min(now - animationStarted, 1000);
+            const firstHalf = elapsed <= 500;
+            const progress = firstHalf ? elapsed / 500 : (elapsed - 500) / 500;
+            const from = firstHalf ? winningEnd : losingEnd;
+            const to = firstHalf ? losingEnd : winningEnd;
+            setMeterAngle(from + (to - from) * progress);
+
+            if (elapsed < 1000) {
+              meterAnimationFrame = requestAnimationFrame(animate);
+            } else {
+              meterAnimationFrame = null;
+              meterFeedbackActive = false;
+              setMeterAngle(winningEnd);
+            }
+          }
+
+          meterAnimationFrame = requestAnimationFrame(animate);
+        }, 1000);
       }
       setMeterAngle(ANGLE_START);
 
@@ -890,6 +943,7 @@
       }
       async function disconnect() {
         cancelCountdown();
+        cancelWinOverlay();
         keepReading = false;
         try {
           if (reader) {
@@ -929,6 +983,7 @@
       }
       function handleDeviceLost() {
         cancelCountdown();
+        cancelWinOverlay();
         keepReading = false;
         reader = null; writer = null;
         textDecoder = null; textEncoder = null;
@@ -951,8 +1006,25 @@
         }
       }
 
+      function cancelWinOverlay() {
+        if (winOverlayTimeout) {
+          clearTimeout(winOverlayTimeout);
+          winOverlayTimeout = null;
+        }
+        if (winFeedbackTimeout) {
+          clearTimeout(winFeedbackTimeout);
+          winFeedbackTimeout = null;
+        }
+        if (meterAnimationFrame) {
+          cancelAnimationFrame(meterAnimationFrame);
+          meterAnimationFrame = null;
+        }
+        meterFeedbackActive = false;
+      }
+
       function runCountdown(cmd) {
         cancelCountdown();
+        cancelWinOverlay();
         startBtn.disabled = true;
         rematchBtn.disabled = true;
         newOppBtn.disabled = true;
@@ -1021,9 +1093,15 @@
             const resolvedName = (who === '1' ? p1NameInput.value : p2NameInput.value) || (who === '1' ? 'Player 1' : 'Player 2');
             winName.textContent = resolvedName;
             winName.className = 'win-name ' + (who === '1' ? 'p1' : 'p2');
-            winOverlay.classList.add('show');
+            winCard.className = 'win-card ' + (who === '1' ? 'p1' : 'p2');
             setGameState('gameover');
             calReadout.textContent = `${resolvedName} wins the round`;
+            cancelWinOverlay();
+            playVirtualWinFeedback(who === '1' ? ANGLE_MAX : ANGLE_MIN);
+            winOverlayTimeout = setTimeout(() => {
+              winOverlay.classList.add('show');
+              winOverlayTimeout = null;
+            }, 2000);
             break;
           }
         }
@@ -1049,7 +1127,7 @@
         p1Icon.style.transform = `scale(${1 + (p1pct / 100) * 0.6})`;
         p2Icon.style.transform = `scale(${1 + (p2pct / 100) * 0.6})`;
 
-        setMeterAngle(angle);
+        if (!meterFeedbackActive) setMeterAngle(angle);
       }
 
       connectBtn.addEventListener('click', connect);
@@ -1059,6 +1137,7 @@
       $('overlayRematch').addEventListener('click', () => rematchBtn.click());
       newOppBtn.addEventListener('click', () => {
         cancelCountdown();
+        cancelWinOverlay();
         p1NameInput.value = '';
         p2NameInput.value = '';
         p1NameInput.focus();
