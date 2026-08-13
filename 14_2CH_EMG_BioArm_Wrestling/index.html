@@ -838,7 +838,7 @@
       const ANGLE_MAX = 180;
       function setMeterAngle(angle) {
         const clamped = Math.max(ANGLE_MIN, Math.min(ANGLE_MAX, angle));
-        servoNeedle.setAttribute('transform', `rotate(${clamped - ANGLE_START} 746 1190)`);
+        servoNeedle.setAttribute('transform', `rotate(${ANGLE_START - clamped} 746 1190)`);
       }
 
       function playVirtualWinFeedback(winningEnd) {
