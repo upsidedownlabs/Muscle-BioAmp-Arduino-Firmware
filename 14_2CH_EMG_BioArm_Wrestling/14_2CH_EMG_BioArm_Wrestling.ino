@@ -77,6 +77,8 @@ GameState state = ST_IDLE;
 constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
 
+void sendTelemetry();
+
 // Class for EMG signal processing and envelope detection
 class EMGChannel {
 private:
@@ -221,11 +223,14 @@ void updateServo() {
 // Moves to the losing end and back to the winning end in one second
 void playWinFeedback(float winningEnd) {
   float losingEnd = (winningEnd == SERVO_MAX) ? SERVO_MIN : SERVO_MAX;
-  servo.write(losingEnd);
-  delay(500);
-  servo.write(winningEnd);
+  armAngle = losingEnd;
+  servo.write(armAngle);
+  sendTelemetry();
   delay(500);
   armAngle = winningEnd;
+  servo.write(armAngle);
+  sendTelemetry();
+  delay(500);
 }
 
 // Detects the winner when the servo reaches either end position
