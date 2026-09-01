@@ -37,19 +37,20 @@
 #define SAMPLE_RATE 500
 #define BAUD_RATE 115200
   
-#define CHANNEL_1 A0  // Player 1 who has to close the servo claw
-#define CHANNEL_2 A1  // Player 2 who has to open the servo claw
+#define CHANNEL_1 A0  // Player 1 
+#define CHANNEL_2 A1  // Player 2 
 
 #define BUFFER_SIZE 64
 #define DEADZONE_DIFF 5.0f
 
 // Servo control macros
 #define SERVO_PIN 2
-#define SERVO_MIN 40.0f
+#define SERVO_MIN 0.0f
 #define SERVO_MAX 180.0f
-#define SERVO_START 109.0f
+#define SERVO_START 90.0f
 #define ANGLE_SENSITIVITY 0.05f
-#define LED_PIN LED_BUILTIN
+#define LED_PIN_1 LED_RX
+#define LED_PIN_2 LED_TX
 
 // Servo control global variables
 Servo servo;
@@ -188,8 +189,6 @@ void handleCommand(String cmd) {
 
 // Resets the game state and starts a new match
 void startGame() {
-  digitalWrite(LED_PIN, LOW);
-
   player1.reset();
   player2.reset();
   armAngle = SERVO_START;
@@ -280,10 +279,16 @@ void setup() {
   servo.attach(SERVO_PIN);
   servo.write(SERVO_START);
 
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+  pinMode(LED_PIN_1, OUTPUT);
+  pinMode(LED_PIN_2, OUTPUT);
+  
+  digitalWrite(LED_PIN_1, LOW);
+  digitalWrite(LED_PIN_2, LOW);
 
   delay(2000);
+
+  digitalWrite(LED_PIN_1, HIGH);
+  digitalWrite(LED_PIN_2, HIGH);
 
   if (!Serial) {
     startGame();
