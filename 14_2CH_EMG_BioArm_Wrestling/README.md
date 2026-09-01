@@ -102,13 +102,25 @@ Connect the servo wires as follows:
 - **Red VCC wire** → suitable servo power supply
 - **Black or brown GND wire** → **GND**
 
-Make sure the servo power supply and Arduino share a common ground. Secure the needle to the servo horn so it starts in the middle and can safely reach both endpoints.
-
 > Servo wire colors can vary, so check your servo's datasheet if its colors are different.
 
-### Step 3: Connect the Arduino
+### Step 3: Center and attach the needle
 
 Connect the Arduino UNO R4 Minima to your computer using a USB cable. This powers the board and provides the serial connection used by the web interface to communicate with the game.
+
+Before screwing the needle onto the meter:
+
+1. [Upload the firmware](#uploading-the-code) to the UNO R4 Minima.
+2. Connect the servo to the board and press the Arduino's reset button.
+3. The servo will move to its **90° center position**.
+4. Place the needle in the middle of the printed meter, then screw it onto the servo horn.
+
+The horn teeth may make the needle sit slightly left or right of the exact center. A small offset is normal, but it can make the two end positions unequal. If needed, adjust the servo limits in the sketch and upload it again:
+
+- Needle sits slightly toward the **left**: reduce `SERVO_MAX` by about 15°, for example from `180` to `165`.
+- Needle sits slightly toward the **right**: increase `SERVO_MIN` by about 15°, for example from `0` to `15`.
+
+Use these values as a starting point and fine-tune them until both sides have nearly equal travel.
 
 ---
 
