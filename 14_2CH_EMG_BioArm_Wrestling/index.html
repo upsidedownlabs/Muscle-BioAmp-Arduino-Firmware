@@ -368,6 +368,8 @@
       gap: 0.5rem;
       box-shadow: var(--shadow);
       width: 100%;
+      max-height: 100%;
+      overflow: hidden;
     }
 
     .vs {
@@ -533,9 +535,10 @@
     .servo-meter {
       position: relative;
       width: 100%;
-      max-width: min(60rem, 85vh);
+      max-width: min(60rem, 85vh, calc((100vh - 24rem) * 1492 / 840));
       aspect-ratio: 1492 / 840;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .servo-meter-layer {
