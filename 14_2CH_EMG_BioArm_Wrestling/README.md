@@ -117,8 +117,8 @@ Before screwing the needle onto the meter:
 
 The horn teeth may make the needle sit slightly left or right of the exact center. A small offset is normal, but it can make the two end positions unequal. If needed, adjust the servo limits in the sketch and upload it again:
 
-- Needle sits slightly toward the **left**: reduce `SERVO_MAX` by about 15°, for example from `180` to `165`.
-- Needle sits slightly toward the **right**: increase `SERVO_MIN` by about 15°, for example from `0` to `15`.
+- Needle sits slightly toward the **left**: reduce `SERVO_MAX` and `SERVO_START` by about 10 degrees.
+- Needle sits slightly toward the **right**: increase `SERVO_MIN` and `SERVO_START` by about 10 degrees.
 
 Use these values as a starting point and fine-tune them until both sides have nearly equal travel.
 

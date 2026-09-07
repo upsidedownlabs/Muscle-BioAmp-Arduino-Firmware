@@ -7,6 +7,7 @@
 
 // Copyright (c) 2021 - 2024 Upside Down Labs - contact@upsidedownlabs.tech
 // Copyright (c) 2026 Varun Patil - vap05072006@gmail.com
+// Copyright (c) 2026 Krishnanshu Mittal - krishnanshu@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
