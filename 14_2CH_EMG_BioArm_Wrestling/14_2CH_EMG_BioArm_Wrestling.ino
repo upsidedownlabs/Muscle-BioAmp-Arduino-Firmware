@@ -7,6 +7,7 @@
 
 // Copyright (c) 2021 - 2024 Upside Down Labs - contact@upsidedownlabs.tech
 // Copyright (c) 2026 Varun Patil - vap05072006@gmail.com
+// Copyright (c) 2026 Krishnanshu Mittal - krishnanshu@upsidedownlabs.tech
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,24 +38,24 @@
 #define SAMPLE_RATE 500
 #define BAUD_RATE 115200
   
-#define CHANNEL_1 A0  // Player 1 who has to close the servo claw
-#define CHANNEL_2 A1  // Player 2 who has to open the servo claw
+#define CHANNEL_1 A0  // Player 1 
+#define CHANNEL_2 A1  // Player 2 
 
 #define BUFFER_SIZE 64
 #define DEADZONE_DIFF 5.0f
 
 // Servo control macros
 #define SERVO_PIN 2
-#define SERVO_OPEN 10.0f
-#define SERVO_CLOSE 90.0f
-#define SERVO_MIN 10.0f
-#define SERVO_MAX 90.0f
-#define ANGLE_SENSITIVITY 0.03f
-#define LED_PIN LED_BUILTIN
+#define SERVO_MIN 0.0f
+#define SERVO_MAX 180.0f
+#define SERVO_START 90.0f
+#define ANGLE_SENSITIVITY 0.05f
+#define LED_PIN_1 LED_RX
+#define LED_PIN_2 LED_TX
 
 // Servo control global variables
 Servo servo;
-float armAngle = 50.0f;
+float armAngle = SERVO_START;
 uint32_t lastServo = 0;
 uint32_t lastTelemetry = 0;
 
@@ -77,6 +78,8 @@ GameState state = ST_IDLE;
 // Buffer for incoming serial commands
 constexpr size_t MAX_CMD_LEN = 16;
 String rxLine = "";
+
+void sendTelemetry(bool force = false);
 
 // Class for EMG signal processing and envelope detection
 class EMGChannel {
@@ -187,18 +190,16 @@ void handleCommand(String cmd) {
 
 // Resets the game state and starts a new match
 void startGame() {
-  digitalWrite(LED_PIN, LOW);
-
   player1.reset();
   player2.reset();
-  armAngle = 50.0f;
-  servo.write(50);
+  armAngle = SERVO_START;
+  servo.write(armAngle);
 
   strength1 = strength2 = 0.0f;
   active1 = active2 = 0.0f;
   diff = 0.0f;
   lastServo = 0;
-  samplePast = 0;
+  samplePast = micros();
   sampleTimer = 0;
 
   state = ST_PLAYING;
@@ -211,12 +212,36 @@ void updateServo() {
     lastServo = millis();
 
     armAngle += diff * ANGLE_SENSITIVITY;
-    armAngle = constrain(armAngle, SERVO_OPEN, SERVO_CLOSE);
+    armAngle = constrain(armAngle, SERVO_MIN, SERVO_MAX);
 
     servo.write(armAngle);
 
     checkGameOver();
   }
+}
+
+// Moves the servo smoothly between two angles in the given time
+void moveServoSmooth(float startAngle, float endAngle, unsigned long duration) {
+  unsigned long moveStarted = millis();
+
+  while (millis() - moveStarted < duration) {
+    float progress = (millis() - moveStarted) / (float)duration;
+    armAngle = startAngle + (endAngle - startAngle) * progress;
+    servo.write(armAngle);
+    sendTelemetry();
+    delay(10);
+  }
+
+  armAngle = endAngle;
+  servo.write(armAngle);
+  sendTelemetry(true);
+}
+
+// Moves to the losing end and back to the winning end in one second
+void playWinFeedback(float winningEnd) {
+  float losingEnd = (winningEnd == SERVO_MAX) ? SERVO_MIN : SERVO_MAX;
+  moveServoSmooth(winningEnd, losingEnd, 500);
+  moveServoSmooth(losingEnd, winningEnd, 500);
 }
 
 // Detects the winner when the servo reaches either end position
@@ -225,16 +250,20 @@ void checkGameOver() {
     servo.write(SERVO_MIN);
     state = ST_GAMEOVER;
     Serial.println("WIN,2");
+    delay(1000);
+    playWinFeedback(SERVO_MIN);
   } else if (armAngle >= SERVO_MAX) {
     servo.write(SERVO_MAX);
     state = ST_GAMEOVER;
     Serial.println("WIN,1");
+    delay(1000);
+    playWinFeedback(SERVO_MAX);
   }
 }
 
 // Transmits player EMG activity and servo position to the web interface at 50 Hz
-void sendTelemetry() {
-  if (millis() - lastTelemetry >= 20) {
+void sendTelemetry(bool force) {
+  if (force || millis() - lastTelemetry >= 20) {
     lastTelemetry = millis();
     Serial.print("EMG,");
     Serial.print(active1);
@@ -247,16 +276,26 @@ void sendTelemetry() {
 
 void setup() {
   Serial.begin(BAUD_RATE);
-  while (!Serial)
-    delay(10);
 
   servo.attach(SERVO_PIN);
-  servo.write(50);
+  servo.write(SERVO_START);
 
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+  pinMode(LED_PIN_1, OUTPUT);
+  pinMode(LED_PIN_2, OUTPUT);
+  
+  digitalWrite(LED_PIN_1, LOW);
+  digitalWrite(LED_PIN_2, LOW);
 
-  Serial.println("READY");
+  delay(2000);
+
+  digitalWrite(LED_PIN_1, HIGH);
+  digitalWrite(LED_PIN_2, HIGH);
+
+  if (!Serial) {
+    startGame();
+  } else {
+    Serial.println("READY");
+  }
 }
 
 void loop() {

@@ -1,6 +1,6 @@
 # BioArm Wrestling – Arm Wrestle with Your Muscles
 
-Turn real muscle activity into a head-to-head arm wrestling match! This project uses **Electromyography (EMG)** signals from two players' forearms to drive a servo-controlled arm, live-visualized in a browser dashboard. Whoever flexes harder wins the round.
+Turn real muscle activity into a head-to-head arm wrestling match! This project uses **Electromyography (EMG)** signals from two players' forearms to move a physical servo needle, a virtual browser meter, or both together. Whoever flexes harder wins the round.
 
 ---
 
@@ -21,14 +21,14 @@ Turn real muscle activity into a head-to-head arm wrestling match! This project 
 
 ## How It Works
 
-BioArm Wrestling is a fun two-player game where you compete using your muscle activity instead of physical strength. Each player wears a Muscle BioAmp Patchy sensor on their forearm, which detects their muscle contractions.
+BioArm Wrestling is a fun two-player game where both players compete using their muscle activity. Each player is connected to a BioAmp sensor, which detects the muscle signals produced while flexing their forearm.
 
-At the start of the match, each player has a different objective:
+Both players have the same goal: **flex stronger than the other player and move the needle toward their side**.
 
-- **Player 1:** Flex your forearm muscles to **close the servo claw**.
-- **Player 2:** Flex your forearm muscles to **open the servo claw**.
+- **Player 1 (Channel 1):** Moves the needle toward their side.
+- **Player 2 (Channel 2):** Moves the needle toward their side.
 
-As both players compete, the servo moves toward the player producing stronger muscle activity. The first player to move the servo completely to their end position wins the round.
+The needle starts in the middle. As both players flex, it moves toward the player producing the stronger muscle signal. The first player to move the needle completely to their endpoint wins the round.
 
 Throughout the match, a live web interface displays both players' muscle activity and the overall match progress, making it easy for players and spectators to follow the action in real time.
 
@@ -37,6 +37,8 @@ Throughout the match, a live web interface displays both players' muscle activit
 ## Features
 
 - **Real-time EMG visualization** waveform traces for both players
+- **Physical and virtual strength meters** that show the needle position in real time
+- **Flexible play modes:** web interface only, physical servo only, or both together
 - **3-second countdown** before every round, so both players start fair and ready
 - **Automatic reconnect** if the USB cable is pulled mid-match. The website detects it, resets cleanly, and reconnects the moment the board is plugged back in
 - **Editable player names**, rematch and new-opponent flows, and a clean winner overlay
@@ -45,14 +47,19 @@ Throughout the match, a live web interface displays both players' muscle activit
 
 ## Hardware Required
 
-This project uses the **Muscle BioAmp Patchy** by Upside Down Labs:
+Choose either of these two-channel EMG setups:
 
-- 2× Muscle BioAmp Patchy (one per player) with its cables
-- Arduino Uno R4 Minima along with its shield
-- 1× Servo motor
+- **2× BioAmp EXG Pill** (one per player) with BioAmp cables. Two EXG Pills are also available together in the **BioAmp EXG Explorer Pack**.
+- **OR 2× Muscle BioAmp Patchy units** (one per player), used with an **Arduino Shield** or wired directly using a breadboard and jumper wires.
+
+Other required items:
+
+- Arduino Uno R4 Minima
+- 1× Servo motor with a 3D-printed meter and needle attached (optional when using only the web interface)
 - Gel electrodes (3 per channel: positive, negative, reference)
-- Alcohol / wet wipes
+- Alcohol swab / wet wipes
 - USB cable (for Arduino)
+- Breadboard and male-to-male jumper wires (for setup without a shield)
 
 > 🛒 Available from the [Upside Down Labs Store](https://store.upsidedownlabs.tech/) and other UDL resellers (Amazon, Robu, Tindie, DigiKey).
 
@@ -61,7 +68,7 @@ This project uses the **Muscle BioAmp Patchy** by Upside Down Labs:
 - [Arduino IDE](https://www.arduino.cc/en/software)
 - Arduino UNO R4 board package:
   `Tools → Board → Boards Manager → Search "Arduino UNO R4 Boards" → Install`
-- A desktop browser with [Web Serial](https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API) support (Chrome or Edge)
+- A computer with a Chromium-based browser such as Chrome, Brave, or Edge (for the web interface)
 
 ---
 
@@ -71,26 +78,49 @@ This project uses the **Muscle BioAmp Patchy** by Upside Down Labs:
   <img src="full-setup.png" alt="Hardware Setup" width="80%">
 </p>
 
-### Step 1: Assemble the hardware
+### Step 1: Connect the BioAmp sensors
 
-Mount the **Arduino Shield** onto the **Arduino UNO R4 Minima**, ensuring that all the header pins are properly aligned and firmly seated.
+You can use either two BioAmp EXG Pills or two Muscle BioAmp Patchy units.
 
-### Step 2: Connect the Muscle BioAmp Patchy sensors
+For a direct breadboard setup:
 
-Each **Muscle BioAmp Patchy** comes with a dedicated connection cable included in the kit. Connect the cable to the Patchy, then plug the other end into the corresponding channel on the Arduino Shield.
+- Connect the Arduino's **5V** and **GND** pins to the breadboard power rails.
+- Connect both sensors' **VCC** pins to the **5V rail**.
+- Connect both sensors' **GND** pins to the **GND rail**.
+- Connect **Player 1's OUT** pin to Arduino **A0 (Channel 1)**.
+- Connect **Player 2's OUT** pin to Arduino **A1 (Channel 2)**.
 
-- **Player 1's Patchy** → **Channel 1 (A0)**
-- **Player 2's Patchy** → **Channel 2 (A1)**
+If using an Arduino Shield, mount it correctly and connect the sensors according to the labels on the shield. Make sure the two outputs reach **A0** and **A1**, or update `CHANNEL_1` and `CHANNEL_2` in the sketch to match the pins used.
 
-Ensure both Patchy boards are securely connected before proceeding.
+Connect one electrode cable to each sensor and double-check VCC and GND before powering the circuit.
 
-### Step 3: Connect the servo motor
+### Step 2: Connect the servo motor (optional)
 
-Connect the servo motor to the **`D2`** digital pin on the Arduino Shield. Make sure the connector is oriented correctly, with the signal, power, and ground pins aligned as marked on the shield.
+Connect the servo wires as follows:
 
-### Step 4: Connect the Arduino
+- **Yellow signal/output wire** → Arduino **D2**
+- **Red VCC wire** → suitable servo power supply
+- **Black or brown GND wire** → **GND**
+
+> Servo wire colors can vary, so check your servo's datasheet if its colors are different.
+
+### Step 3: Center and attach the needle
 
 Connect the Arduino UNO R4 Minima to your computer using a USB cable. This powers the board and provides the serial connection used by the web interface to communicate with the game.
+
+Before screwing the needle onto the meter:
+
+1. [Upload the firmware](#uploading-the-code) to the UNO R4 Minima.
+2. Connect the servo to the board and press the Arduino's reset button.
+3. The servo will move to its **90° center position**.
+4. Place the needle in the middle of the printed meter, then screw it onto the servo horn.
+
+The horn teeth may make the needle sit slightly left or right of the exact center. A small offset is normal, but it can make the two end positions unequal. If needed, adjust the servo limits in the sketch and upload it again:
+
+- Needle sits slightly toward the **left**: reduce `SERVO_MAX` and `SERVO_START` by about 10 degrees.
+- Needle sits slightly toward the **right**: increase `SERVO_MIN` and `SERVO_START` by about 10 degrees.
+
+Use these values as a starting point and fine-tune them until both sides have nearly equal travel.
 
 ---
 
@@ -106,9 +136,11 @@ Refer [this guide](https://docs.upsidedownlabs.tech/guides/usage-guides/skin-pre
 
 ### Electrode Placement
 
-The muscle bioAmp Patchy is designed to directly plug into adjacent electrodes, stick the Patchy directly over the forearm muscle you intend to contract and connect the reference electrode on the bony region of your elbow using the snap cable provided on the cable of Muscle BioAmp Patchy. Refer [this documentation](https://docs.upsidedownlabs.tech/hardware/bioamp/muscle-bioamp-patchy/index.html#step-4-electrode-placements) for proper electrode placement using Muscle BioAmp Patchy.
+For each player, connect three gel electrodes. Place the sensing electrodes over the forearm muscle being flexed, and place the reference electrode on the bony region near the elbow. Refer to the [BioAmp EXG Pill documentation](https://docs.upsidedownlabs.tech/hardware/bioamp/bioamp-exg-pill/index.html#measuring-electromyography-emg) or [Muscle BioAmp Patchy documentation](https://docs.upsidedownlabs.tech/hardware/bioamp/muscle-bioamp-patchy/index.html#step-4-electrode-placements) for the selected sensor.
 
 Good skin contact is the single biggest factor in clean EMG signal, spend the extra minute here.
+
+> **Fair-play note:** Keep the muscle location, electrode spacing, electrode direction, and skin preparation as similar as possible for both players. This helps make the comparison fair.
 
 ---
 
@@ -142,12 +174,24 @@ Good skin contact is the single biggest factor in clean EMG signal, spend the ex
 
 ## Playing a Match
 
+Choose any of these play modes:
+
+- **Web interface only:** Leave the physical servo disconnected and use the virtual strength meter in the browser.
+- **Servo only:** Play using the physical meter without opening the web interface.
+- **Both:** Connect the servo and web interface together to use both meters at the same time.
+
+### Using the web interface
+
 1. Click **Connect to Arduino** and select the correct serial port
 2. Enter both player names
 3. Click **Start Duel**, a 3-second countdown begins
-4. Flex your forearm muscles. The waveform traces and win meter update in real time.
-5. First player to push the arm to their win angle takes the round
+4. Flex your forearm muscles stronger than your opponent to move the needle toward your side. The waveform traces and strength meter update in real time.
+5. The first player to move the needle completely to their endpoint wins the round
 6. Hit **Rematch** to go again, or **New Opponents** to reset names and start fresh
+
+### Using only the physical servo
+
+Power or reset the Arduino without opening Serial or the web interface. The game starts automatically after 2 seconds. Press the Arduino's reset button to play another round.
 
 ---
 
@@ -161,9 +205,3 @@ Good skin contact is the single biggest factor in clean EMG signal, spend the ex
 | Noisy / inconsistent EMG readings | Re-do skin prep; check electrode placement and contact; sit away from AC appliances and chargers. See the [UDL troubleshooting guide](https://docs.upsidedownlabs.tech/guides/troubleshoot/tips/index.html) for more tips |
 | USB unplugged mid-match | The app auto-detects this, resets the UI, and reconnects automatically once the board is plugged back in |
 | Web Serial not supported | Use Chrome or Edge on desktop or check whether your browser supports web serial interface |
-
----
-
-## To Do
-
-Design and 3D print a custom indicator that mounts onto the servo horn to make the winner easier to visualize. As the servo rotates from **0° to 180°**, the indicator moves toward the player with stronger EMG activity, clearly showing the match progress.
